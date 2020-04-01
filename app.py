@@ -26,8 +26,8 @@ def route_generate(name='Tasks', mode=6):
     mode = int(mode)
     with app.app_context():
         x = symbols('x')
-        pdf, _, _ = expr_to_pdf([generator(x + np.random.randint(-5, 6), 1 + np.random.randint(0, 61) % mode)
-                                 for _ in range(5)], name, keep_file=False)
+        pdf, _, _ = expr_to_pdf([generator(x + np.random.randint(-5, 6), 1 + np.random.randint(0, 121) % mode)
+                                 for _ in range(12)], name, keep_file=False)
         response = make_response(pdf)
         # response.headers.set('Content-Disposition', 'attachment', filename=name + '.pdf')
         response.headers.set('Content-Type', 'application/pdf')

@@ -1,0 +1,4 @@
+flask
+pdflatex
+sympy
+numpy

@@ -1,3 +1,4 @@
+from sympy.core import *
 from pdflatex import PDFLaTeX
 from sympy.printing.latex import LatexPrinter
 from sympy.core.function import _coeff_isneg
@@ -47,6 +48,7 @@ def print_my_latex(expr):
 
 
 def make_fractions_pretty(expr):
+    # TODO: works badly
     d = {}
     try:
         for memb in expr.as_coeff_mul()[1][-1].as_coeff_add()[1]:
@@ -55,20 +57,30 @@ def make_fractions_pretty(expr):
                 d[denom] += num
             else:
                 d[denom] = num
-        return np.prod(expr.as_coeff_mul()[1][:-1])*np.sum([d[k]/k for k in d])
+        return np.prod(expr.as_coeff_mul()[1][:-1]) * np.sum([d[k] / k for k in d])
     except:
-        return 'error'
+        return expr
+
+
+def remove_float_one(expr):
+    if type(expr) == mul.Mul:
+        return expr.as_coeff_mul()[0] * np.prod(
+            [remove_float_one(val) if val != 1.0 else 1 for val in expr.as_coeff_mul()[1]])
+    if type(expr) == add.Add:
+        return expr.as_coeff_add()[0] + np.sum([remove_float_one(val) for val in expr.as_coeff_add()[1]])
+    return expr
 
 
 def expr_to_pdf(res, name, keep_file=False):
     content = r"""
-\documentclass{}
+\documentclass[a4paper]{}
 \begin{}
 {}
 \end{}
-""".format('{article}', '{document}', ''.join([print_my_latex(make_fractions_pretty(item)) for item in res]), '{document}')
+""".format('{article}', '{document}',
+           '\n\\newline\n'.join([print_my_latex(make_fractions_pretty(item)) for item in res]), '{document}')
 
-    with open('temp.tex','w') as f:
+    with open('temp.tex', 'w') as f:
         f.write(content)
     pdfl = PDFLaTeX.from_texfile('temp.tex')
     pdfl.set_pdf_filename(name)

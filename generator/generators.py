@@ -1,4 +1,4 @@
-from generator.extenders import extender_1, extender_2
+from generator.extenders import *
 
 
 def generator(expr, mode=1):
@@ -16,3 +16,17 @@ def generator(expr, mode=1):
         return extender_2(e1)
     if mode == 6:
         return extender_2(e2)
+    e3 = extender_3(expr)
+    if mode == 7:
+        return e3
+    if mode == 8:
+        return extender_1(e3)
+    if mode == 9:
+        return extender_2(e3)
+    if mode == 10:
+        return extender_3(e3)
+    if mode == 11:
+        return extender_3(e1)
+    if mode == 12:
+        return extender_3(e2)
+
