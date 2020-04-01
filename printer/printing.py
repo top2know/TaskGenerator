@@ -47,8 +47,12 @@ def print_my_latex(expr):
     return '\[' + MyLatexPrinter().doprint(expr) + '\]'
 
 
-def make_fractions_pretty(expr):
+def make_fractions_pretty(expr, check=True):
     # TODO: works badly
+    if type(expr) is not mul.Mul:
+        if check:
+            print('simple', type(expr), expr)
+        return expr
     d = {}
     try:
         for memb in expr.as_coeff_mul()[1][-1].as_coeff_add()[1]:
@@ -57,8 +61,14 @@ def make_fractions_pretty(expr):
                 d[denom] += num
             else:
                 d[denom] = num
-        return np.prod(expr.as_coeff_mul()[1][:-1]) * np.sum([d[k] / k for k in d])
+        res = expr.as_coeff_mul()[0]*np.prod(expr.as_coeff_mul()[1][:-1]) * (expr.as_coeff_mul()[1][-1].as_coeff_add()[0]+np.sum([d[k] / k for k in d]))
+        assert(res.simplify() == expr.simplify())
+        return res
+    except AssertionError:
+        print('error while making pretty', res.simplify(), expr.simplify(), expr.as_coeff_mul()[1][-1], np.sum([d[k] / k for k in d]))
+        return expr
     except:
+        print('random exception')
         return expr
 
 
@@ -78,7 +88,7 @@ def expr_to_pdf(res, name, keep_file=False):
 {}
 \end{}
 """.format('{article}', '{document}',
-           '\n\\newline\n'.join([print_my_latex(make_fractions_pretty(item)) for item in res]), '{document}')
+           '\n\\newline\n'.join([print_my_latex(make_fractions_pretty(item, check=False)) for item in res]), '{document}')
 
     with open('temp.tex', 'w') as f:
         f.write(content)
@@ -88,3 +98,23 @@ def expr_to_pdf(res, name, keep_file=False):
     pdfl.set_jobname(name)
     pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=keep_file)
     return pdf, log, completed_process
+
+
+s = """"""
+
+
+def str_tree(tree, level=0):
+    global s
+    if level == 0:
+        s = """"""
+    for k in tree:
+        s += ('----' * level + ' ' + k)
+        if type(tree[k]) is list:
+            s += '\r\n<br>'
+            for memb in tree[k]:
+                str_tree(memb, level=level+1)
+        else:
+            s += (': ' + str(tree[k]))
+            s += """\r\n<br>"""
+    if level == 0:
+        return s

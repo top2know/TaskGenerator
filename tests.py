@@ -7,13 +7,16 @@ from printer.printing import *
 init_printing()
 
 x = symbols('x')
-for i in range(1, 13):
+for i in range(1, 43):
     print(i, make_fractions_pretty(generator(x+1, i)))
 
 
 assert(extender_1(x+1).simplify() == x+1)
 assert(extender_2(x+1).simplify() == x+1)
 assert(extender_3(x+1).simplify() == x+1)
+assert(extender_4(x+1).simplify() == x+1)
+assert(extender_5(x+1).simplify() == x+1)
+assert(extender_6(x+1).simplify() == x+1)
 
 expr_to_pdf([generator(x + np.random.randint(-5, 6), 1 + np.random.randint(0, 61) % 6)
                                  for _ in range(5)], 'name', keep_file=True)
