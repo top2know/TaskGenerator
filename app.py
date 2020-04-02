@@ -6,7 +6,6 @@ from sympy import *
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def hello_world():
     return render_template('index.html', user='Alex')
@@ -40,7 +39,7 @@ def route_generate(name='Tasks', mode=3):
         pdf, _, _ = expr_to_pdf(tasks, name, keep_file=False)
         _, _, _ = expr_to_pdf(solutions, 'Solutions', keep_file=True)
         response = make_response(pdf)
-        # response.headers.set('Content-Disposition', 'attachment', filename=name + '.pdf')
+        #response.headers.set('Content-Disposition', 'attachment', filename=name + '.pdf')
         response.headers.set('Content-Type', 'application/pdf')
         return response
 

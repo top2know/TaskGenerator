@@ -68,7 +68,6 @@ def make_fractions_pretty(expr, check=True):
         print('error while making pretty', res.simplify(), expr.simplify(), expr.as_coeff_mul()[1][-1], np.sum([d[k] / k for k in d]))
         return expr
     except:
-        print('random exception')
         return expr
 
 
@@ -94,7 +93,7 @@ def expr_to_pdf(res, name, keep_file=False):
         f.write(content)
     pdfl = PDFLaTeX.from_texfile('temp.tex')
     pdfl.set_pdf_filename(name)
-    pdfl.set_output_directory()
+    pdfl.set_output_directory('out')
     pdfl.set_jobname(name)
     pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=keep_file)
     return pdf, log, completed_process

@@ -2,3 +2,7 @@ venv/*
 .idea/*
 __pycache__/*
 out/*
+node_modules/*
+.DS_Store
+printer/__pycache__/*
+generator/__pycache__/*

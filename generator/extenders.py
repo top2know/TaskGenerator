@@ -1,6 +1,7 @@
 import numpy as np
 from sympy import *
 
+
 def two_const(n_min=-20, n_max=20, floats=False, roots=False):
     c1, c2 = 0, 0
     while c1 == c2:
@@ -18,6 +19,7 @@ def two_const(n_min=-20, n_max=20, floats=False, roots=False):
                 roots = False
     return c1, c2
 
+
 def extender_1(expr, n_min=-20, n_max=20, floats=False, roots=False):
     """expr -> (1+(b-a)/a)*((expr*a)/b)"""
     if n_min >= n_max:
@@ -31,7 +33,6 @@ def extender_1(expr, n_min=-20, n_max=20, floats=False, roots=False):
     first = (expr * a).expand() / b
     second = 1 + (b - a) / a
     res = first * second
-    assert (res.simplify() == expr.simplify())
     return res
 
 
@@ -59,7 +60,6 @@ def extender_2(expr, n_min=-20, n_max=20, floats=False, roots=False):
     k = S(c1)
     second = 1 / (k / b - k / -a + (x ** 2 + k ** 2) / (a * b).expand())
     res = first * second
-    assert (res.simplify() == expr.simplify())
     return res
 
 
