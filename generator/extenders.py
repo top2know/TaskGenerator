@@ -76,7 +76,7 @@ def extender_3(expr, n_min=-20, n_max=20, floats=False, roots=False):
     first = (expr / 2 * a).expand() / a
     second = (expr * a * b).expand() / (2 * a * b).expand()
     res = first + second
-    assert (res.simplify() == expr.simplify())
+    # assert (res.simplify() == expr.simplify())
     return res
 
 
@@ -90,13 +90,13 @@ def extender_4(expr, n_min=-20, n_max=20, floats=False, roots=False):
     x = symbols('x')
     a = x + S(c1)
     b = x + S(c2)
-    first = (expr * a).expand() / (b**2)
+    first = (expr * a).expand() / (b ** 2)
     c = 0
     while c == 0:
         c = np.random.randint(n_min, n_max)
     second = c * b + (b * (b - c * a)).expand() / a
     res = first * second
-    assert (res.simplify() == expr.simplify())
+    # assert (res.simplify() == expr.simplify())
     return res
 
 
@@ -116,7 +116,7 @@ def extender_5(expr, n_min=-20, n_max=20, floats=False, roots=False):
         c = np.random.randint(n_min, n_max)
     second = c + (b - c * a).expand() / a
     res = first * second
-    assert (res.simplify() == expr.simplify())
+    # assert (res.simplify() == expr.simplify())
     return res
 
 
@@ -134,7 +134,7 @@ def extender_6(expr, n_min=-20, n_max=20, floats=False, roots=False):
     c = 0
     while c == 0 or c == 1:
         c = np.random.randint(n_min, n_max)
-    second = c/b + (1 - (c * a).expand() / b) / a
+    second = c / b + (1 - (c * a).expand() / b) / a
     res = first * second
-    assert (res.simplify() == expr.simplify())
+    # assert (res.simplify() == expr.simplify())
     return res

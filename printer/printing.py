@@ -47,6 +47,14 @@ def print_my_latex(expr):
     return '\[' + MyLatexPrinter().doprint(expr) + '\]'
 
 
+def print_my_latex_html(expr):
+    """ Most of the printers define their own wrappers for print().
+    These wrappers usually take printer settings. Our printer does not have
+    any settings.
+    """
+    return MyLatexPrinter().doprint(expr)
+
+
 def make_fractions_pretty(expr, check=True):
     # TODO: works badly
     if type(expr) is not mul.Mul:
