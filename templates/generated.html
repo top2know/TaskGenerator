@@ -7,7 +7,10 @@
     <title>Generated</title>
 </head>
 <body>
+{% extends 'menu.html' %}
+{% block content %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
 {{ data|safe }}
+{% endblock %}
 </body>
 </html>

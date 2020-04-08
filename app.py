@@ -37,6 +37,12 @@ def task_generator(mode):
     return tasks
 
 
+def task_generator_new(type, xmin, xmax):
+    x = symbols('x')
+    tasks = [generator(x + np.random.randint(xmin, xmax+1), m) for m in type]
+    return tasks
+
+
 @app.route("/generate/<name>/<int:mode>", methods=['GET'])
 def route_generate(name='Tasks', mode=3):
     with app.app_context():
@@ -76,6 +82,33 @@ def tree(mode=-1):
     d = parse_sympy(mfp, for_print=True)
     res = str_tree(d, 0)
     return res
+
+
+@app.route('/menu')
+def get_menu():
+    return render_template('menu.html')
+
+
+@app.route('/generate_taskset', methods=['GET'])
+def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5):
+    arg = request.args
+    num = int(arg.get('num')) if 'num' in arg else num
+    type = int(arg.get('type')) if 'type' in arg else type
+    xmin = int(arg.get('xmin')) if 'xmin' in arg else xmin
+    xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
+    var = [type]*num if type != 42 else list(range(num))
+    tasks = task_generator_new(var, xmin, xmax)
+    s = "\n".join(["<div id = \"{}\"></div>".format(i) for i in range(len(tasks))])
+    s += """<script>
+window.onload = function()
+{{
+"""
+    for i, res in enumerate(tasks):
+        s += """katex.render(\"{}\", document.getElementById(\"{}\"));
+""".format(print_my_latex_html(make_fractions_pretty(res, check=False)).replace('\\', '\\\\'), i)
+    s +="""}}
+</script>"""
+    return render_template('generated.html', data=s, num=num, type=type, xmin=xmin, xmax=xmax)
 
 
 if __name__ == '__main__':

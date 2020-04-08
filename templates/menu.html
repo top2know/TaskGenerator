@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate task</title>
+    <script>
+        function get_tasks() {
+            var num = document.getElementById("num").value;
+            var type = document.getElementById("type");
+            alert('done')
+        }
+  </script>
+</head>
+<body>
+<form id="menu" action="/generate_taskset" method="get">
+    <strong>Введите количество заданий</strong>
+    {% if num %}
+    <input name="num" id="num" value={{ num }} size="4" form="menu"><br>
+    {% else %}
+    <input name="num" id="num" value="5" size="4" form="menu"><br>
+    {% endif %}
+    <strong>Введите номер метода генерации (от 0 до 41, 42 - напечатает первые n методов, где n - количество заданий) </strong>
+    {% if type %}
+    <input name="type" id="type" value={{ type }} size="4" form="menu"><br>
+    {% else %}
+    <input name="type" id="type" value="42" size="4" form="menu"><br>
+    {% endif %}
+    <strong>Введите минимальное значение константы</strong>
+    {% if xmin %}
+    <input name="xmin" id="xmin" value={{ xmin }} size="4" form="menu"><br>
+    {% else %}
+    <input name="xmin" id="xmin" value="-5" size="4" form="menu"><br>
+    {% endif %}
+    <strong>Введите максимальное значение константы </strong>
+    {% if xmax %}
+    <input name="xmax" id="xmax" value={{ xmax }} size="4" form="menu"><br>
+    {% else %}
+    <input name="xmax" id="xmax" value="5" size="4" form="menu"><br>
+    {% endif %}
+    <button>Сгенерировать задания</button><br>
+</form>
+
+<hr>
+{% block content %}{% endblock %}
+</body>
+</html>
