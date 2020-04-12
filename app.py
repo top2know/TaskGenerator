@@ -38,7 +38,7 @@ def task_generator(mode):
 
 
 def task_generator_new(type, xmin, xmax):
-    x = symbols('x')
+    x = create_var(can_other_letters=False)
     tasks = [generator(x + np.random.randint(xmin, xmax+1), m) for m in type]
     return tasks
 
@@ -59,29 +59,22 @@ def route_generate(name='Tasks', mode=3):
 @app.route('/generate_html/<int:mode>')
 def route_generate_html(mode=3):
     tasks = task_generator(mode)
-    s = "\n".join(["<div id = \"{}\"></div>".format(i) for i in range(len(tasks))])
-    s += """<script>
-window.onload = function()
-{{
-"""
-    for i, res in enumerate(tasks):
-        s += """katex.render(\"{}\", document.getElementById(\"{}\"));
-""".format(print_my_latex_html(make_fractions_pretty(res, check=False)).replace('\\', '\\\\'), i)
-    s +="""}}
-</script>"""
+    s = print_tex_on_html(tasks)
     return render_template('generated.html', data=s)
 
 
-@app.route('/tree/', defaults={'mode': -1})
-@app.route('/tree/<int:mode>')
+@app.route('/tree')
 def tree(mode=-1):
+    arg = request.args
+    mode = int(arg.get('mode')) if 'mode' in arg else mode
     x = symbols('x')
     if mode == -1:
         mode = np.random.randint(6, 12)
-    mfp = make_fractions_pretty(generator(x + np.random.randint(-10, 11), mode))
-    d = parse_sympy(mfp, for_print=True)
+    mfp = generator(x + np.random.randint(-10, 11), mode)
+    tex_html = print_tex_on_html([mfp])
+    d = parse_sympy(make_fractions_pretty(mfp), for_print=True)
     res = str_tree(d, 0)
-    return res
+    return render_template('tree.html', expression=tex_html, tree=res)
 
 
 @app.route('/menu')
@@ -98,17 +91,13 @@ def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5):
     xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
     var = [type]*num if type != 42 else list(range(num))
     tasks = task_generator_new(var, xmin, xmax)
-    s = "\n".join(["<div id = \"{}\"></div>".format(i) for i in range(len(tasks))])
-    s += """<script>
-window.onload = function()
-{{
-"""
-    for i, res in enumerate(tasks):
-        s += """katex.render(\"{}\", document.getElementById(\"{}\"));
-""".format(print_my_latex_html(make_fractions_pretty(res, check=False)).replace('\\', '\\\\'), i)
-    s +="""}}
-</script>"""
-    return render_template('generated.html', data=s, num=num, type=type, xmin=xmin, xmax=xmax)
+    tex_html = print_tex_on_html(tasks)
+    return render_template('generated.html', data=tex_html, num=num, type=type, xmin=xmin, xmax=xmax)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':

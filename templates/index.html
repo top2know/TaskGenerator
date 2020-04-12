@@ -1,34 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Task Generator</title>
-    <link rel='stylesheet' type="text/css" href='../static/styles/styles.css'/>
     <link rel="icon" type="image/png" href="../static/images/icon.png" />
 </head>
 <body>
-    <ul id="navbar">
-      <li><a href="/">Главная</a></li>
-      <li><a href="/news">Новости</a></li>
-      <li><a href="/menu">Меню</a></li>
-      <li><a>Сгенерировать задание в PDF (doesn't work)</a>
-        <ul>
-          <li><a href="/generate/lol/0">Простое</a></li>
-          <li><a href="/generate/kek/1">Среднее</a></li>
-          <li><a href="/generate/mda/2">Сложное</a></li>
-          <li><a href="/generate/well/3">Полное</a></li>
-        </ul>
-      </li>
-      <li><a>Сгенерировать задание на странице</a>
-        <ul>
-          <li><a href="/generate_html/0">Простое</a></li>
-          <li><a href="/generate_html/1">Среднее</a></li>
-          <li><a href="/generate_html/2">Сложное</a></li>
-          <li><a href="/generate_html/3">Полное</a></li>
-        </ul>
-      </li>
-      <li><a href="/tree/">Пример дерева</a></li>
-      <li><a href="/about">Создатель</a></li>
-    </ul>
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Это главная страница. Воспользуйтесь меню выше!</h1>
+{% endblock content %}
 </body>
 </html>

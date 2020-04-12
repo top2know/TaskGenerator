@@ -125,3 +125,17 @@ def str_tree(tree, level=0):
             s += """\r\n<br>"""
     if level == 0:
         return s
+
+
+def print_tex_on_html(tasks):
+    s = "\n".join(["<div id = \"{}\"></div><br>".format(i) for i in range(len(tasks))])
+    s += """<script>
+    window.onload = function()
+    {{
+    """
+    for i, res in enumerate(tasks):
+        s += """katex.render(\"{}\", document.getElementById(\"{}\"));
+    """.format(print_my_latex_html(make_fractions_pretty(res, check=False)).replace('\\', '\\\\'), i)
+    s += """}}
+    </script>"""
+    return s
