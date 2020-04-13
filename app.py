@@ -83,16 +83,18 @@ def get_menu():
 
 
 @app.route('/generate_taskset', methods=['GET'])
-def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5):
+def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
     arg = request.args
     num = int(arg.get('num')) if 'num' in arg else num
     type = int(arg.get('type')) if 'type' in arg else type
     xmin = int(arg.get('xmin')) if 'xmin' in arg else xmin
     xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
+    rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
+    np.random.seed(rnd)
     var = [type]*num if type != 42 else list(range(num))
     tasks = task_generator_new(var, xmin, xmax)
     tex_html = print_tex_on_html(tasks)
-    return render_template('generated.html', data=tex_html, num=num, type=type, xmin=xmin, xmax=xmax)
+    return render_template('generated.html', data=tex_html, num=num, type=type, xmin=xmin, xmax=xmax, rnd=rnd)
 
 
 @app.errorhandler(404)

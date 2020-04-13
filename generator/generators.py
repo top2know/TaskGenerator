@@ -4,6 +4,14 @@ methods = [extender_1, extender_2, extender_3, extender_4, extender_5, extender_
 
 
 def generator(expr, mode=1, floats=False, roots=False):
+    """
+    Generates the complicated expression for the given
+    :param expr: expression
+    :param mode: algorithm of complication
+    :param floats: enable floats
+    :param roots: enable roots
+    :return: complicated expression
+    """
     res = expr
     cur = mode
     try:
@@ -22,6 +30,13 @@ def generator(expr, mode=1, floats=False, roots=False):
 
 
 def generate_distinct(expr, floats=False, roots=False):
+    """
+    Complicates the expression by parts
+    :param expr: expression
+    :param floats: enable floats
+    :param roots: enable roots
+    :return: complicated expression
+    """
     if type(expr) != add.Add:
         return generator(expr, np.random.randint(0, 42), floats, roots)
 

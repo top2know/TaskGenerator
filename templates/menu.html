@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Сгенерировать задания</title>
+    <link rel="stylesheet" href="../static/styles/input_style.css">
+
     <script>
         function get_tasks() {
             var num = document.getElementById("num").value;
@@ -18,27 +20,33 @@
 <form id="settings" action="/generate_taskset" method="get">
     <strong>Введите количество заданий</strong>
     {% if num %}
-    <input name="num" id="num" value={{ num }} size="4"><br>
+    <input name="num" id="num" value={{ num }} size="4" required pattern="[0-9]{1,2}"><br>
     {% else %}
-    <input name="num" id="num" value="5" size="4"><br>
+    <input name="num" id="num" value="5" size="4" required pattern="[0-9]{1,2}"><br>
     {% endif %}
     <strong>Введите номер метода генерации (от 0 до 41, 42 - напечатает первые n методов, где n - количество заданий) </strong>
     {% if type %}
-    <input name="type" id="type" value={{ type }} size="4"><br>
+    <input name="type" id="type" value={{ type }} size="4" required pattern="[0-9]{1,2}"><br>
     {% else %}
-    <input name="type" id="type" value="42" size="4"><br>
+    <input name="type" id="type" value="42" size="4" required pattern="[0-9]{1,2}"><br>
     {% endif %}
     <strong>Введите минимальное значение константы</strong>
     {% if xmin %}
-    <input name="xmin" id="xmin" value={{ xmin }} size="4"><br>
+    <input name="xmin" id="xmin" value={{ xmin }} size="4" required pattern="[-]{0,1}[0-9]{1,2}"><br>
     {% else %}
-    <input name="xmin" id="xmin" value="-5" size="4"><br>
+    <input name="xmin" id="xmin" value="-5" size="4" required pattern="[-]{0,1}[0-9]{1,2}"><br>
     {% endif %}
     <strong>Введите максимальное значение константы </strong>
     {% if xmax %}
-    <input name="xmax" id="xmax" value={{ xmax }} size="4"><br>
+    <input name="xmax" id="xmax" value={{ xmax }} size="4" required pattern="[-]{0,1}[0-9]{1,2}"><br>
     {% else %}
-    <input name="xmax" id="xmax" value="5" size="4"><br>
+    <input name="xmax" id="xmax" value="5" size="4" required pattern="[-]{0,1}[0-9]{1,2}"><br>
+    {% endif %}
+    <strong>Введите номер варианта </strong>
+    {% if xmax %}
+    <input name="rnd" id="rnd" value={{ rnd }} size="4" required pattern="[0-9]{1,5}"><br>
+    {% else %}
+    <input name="rnd" id="rnd" value="42" size="4" required pattern="[0-9]{1,5}"><br>
     {% endif %}
     <button>Сгенерировать задания</button><br>
 </form>

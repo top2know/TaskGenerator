@@ -6,7 +6,7 @@ import numpy as np
 
 
 class MyLatexPrinter(LatexPrinter):
-    """Print better."""
+    """Class for better-looking printing."""
 
     add_settings = {'order': 'normal'}
 
@@ -40,22 +40,30 @@ class MyLatexPrinter(LatexPrinter):
 
 
 def print_my_latex(expr):
-    """ Most of the printers define their own wrappers for print().
-    These wrappers usually take printer settings. Our printer does not have
-    any settings.
+    """
+    LaTeX print ot pdflatex
+    :param expr: expression
+    :return: LaTeX expression
     """
     return '\[' + MyLatexPrinter().doprint(expr) + '\]'
 
 
 def print_my_latex_html(expr):
-    """ Most of the printers define their own wrappers for print().
-    These wrappers usually take printer settings. Our printer does not have
-    any settings.
+    """
+    LaTeX print for HTML usage (KaTEX)
+    :param expr:
+    :return:
     """
     return MyLatexPrinter().doprint(expr)
 
 
 def make_fractions_pretty(expr, check=True):
+    """
+    a/c + b/c -> (a+b)/c
+    :param expr: expression
+    :param check: debug option
+    :return: transformed expression
+    """
     # TODO: works badly
     if type(expr) is not mul.Mul:
         if check:
@@ -80,6 +88,11 @@ def make_fractions_pretty(expr, check=True):
 
 
 def remove_float_one(expr):
+    """
+    Solve the 1.0 problem of SymPy (1*x != 1.0*x)
+    :param expr: expression
+    :return: transformed expression
+    """
     if type(expr) == mul.Mul:
         return expr.as_coeff_mul()[0] * np.prod(
             [remove_float_one(val) if val != 1.0 else 1 for val in expr.as_coeff_mul()[1]])
@@ -89,6 +102,13 @@ def remove_float_one(expr):
 
 
 def expr_to_pdf(res, name, keep_file=False):
+    """
+    Transforms list of expressions to PDF
+    :param res: list of expressions
+    :param name: File name
+    :param keep_file: Save file locally
+    :return: PDF file
+    """
     content = r"""
 \documentclass[a4paper]{}
 \begin{}
@@ -111,6 +131,12 @@ s = """"""
 
 
 def str_tree(tree, level=0):
+    """
+    Tree printer
+    :param tree: tree
+    :param level: node level
+    :return: string representation of tree
+    """
     global s
     if level == 0:
         s = """"""
@@ -128,6 +154,12 @@ def str_tree(tree, level=0):
 
 
 def print_tex_on_html(tasks):
+    """
+    Prints expressions on HTML page
+    :param tasks: list of expressions
+    :return: HTML code
+    """
+
     s = "\n".join(["<div id = \"{}\"></div><br>".format(i) for i in range(len(tasks))])
     s += """<script>
     window.onload = function()

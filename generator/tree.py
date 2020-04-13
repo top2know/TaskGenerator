@@ -3,6 +3,12 @@ import numpy as np
 
 
 def get_coeffs(expr, for_print=False):
+    """
+    Get parts of expression
+    :param expr: expression
+    :param for_print: JSON (print) support
+    :return: dict {type: expr}
+    """
     if not for_print and (type(expr) == symbol.Symbol
                           or type(expr) == numbers.NegativeOne
                           or type(expr) == numbers.Zero
@@ -36,6 +42,12 @@ def get_coeffs(expr, for_print=False):
 
 
 def make_step(arr, for_print=False):
+    """
+    Recursive method for transforming SymPy to tree
+    :param arr: parts of expression
+    :param for_print: JSON (print) support
+    :return: tree node
+    """
     res = arr.copy()
     for k in res:
         if k not in ('unknown', 'sym'):
@@ -47,10 +59,21 @@ def make_step(arr, for_print=False):
 
 
 def parse_sympy(expr, for_print=False):
+    """
+    Transforms SymPy expression to tree form
+    :param expr:
+    :param for_print:
+    :return:
+    """
     return make_step(get_coeffs(expr, for_print), for_print)
 
 
 def parse_tree(d):
+    """
+    Transforms tree to SymPy expression
+    :param d: tree mode
+    :return: SymPy expression
+    """
     if len(d) > 1:
         raise ValueError('')
     if 'mul' in d:
