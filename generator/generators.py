@@ -3,11 +3,13 @@ from generator.extenders import *
 methods = [extender_1, extender_2, extender_3, extender_4, extender_5, extender_6]
 
 
-def generator(expr, mode=1, floats=False, roots=False):
+def generator(expr, mode=1, nmin=-20, nmax=20, floats=False, roots=False):
     """
     Generates the complicated expression for the given
     :param expr: expression
     :param mode: algorithm of complication
+    :param nmin: min value of const
+    :param nmax: max value of const
     :param floats: enable floats
     :param roots: enable roots
     :return: complicated expression
@@ -16,7 +18,7 @@ def generator(expr, mode=1, floats=False, roots=False):
     cur = mode
     try:
         while cur >= 0:
-            res = methods[cur % len(methods)](res, floats=floats, roots=roots)
+            res = methods[cur % len(methods)](res, n_min=nmin, n_max=nmax, floats=floats, roots=roots)
             cur //= len(methods)
             if cur == 0:
                 break

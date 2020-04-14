@@ -37,9 +37,9 @@ def task_generator(mode):
     return tasks
 
 
-def task_generator_new(type, xmin, xmax):
-    x = create_var(can_other_letters=False)
-    tasks = [generator(x + np.random.randint(xmin, xmax+1), m) for m in type]
+def task_generator_new(type, xmin, xmax, roots=False, floats=False):
+    x = create_var(can_other_letters=False, can_root=roots)
+    tasks = [generator(x + np.random.randint(xmin, xmax+1), m, xmin, xmax, roots=roots, floats=floats) for m in type]
     return tasks
 
 
@@ -90,11 +90,17 @@ def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
     xmin = int(arg.get('xmin')) if 'xmin' in arg else xmin
     xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
     rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
+    roots = 'roots' in arg
+    floats = 'floats' in arg
+    if xmin >= xmax:
+        return render_template('generated.html', num=num, type=type, xmin=xmin,
+                               xmax=xmax, rnd=rnd, roots=roots, floats=floats)
     np.random.seed(rnd)
     var = [type]*num if type != 42 else list(range(num))
-    tasks = task_generator_new(var, xmin, xmax)
+    tasks = task_generator_new(var, xmin, xmax, roots, floats)
     tex_html = print_tex_on_html(tasks)
-    return render_template('generated.html', data=tex_html, num=num, type=type, xmin=xmin, xmax=xmax, rnd=rnd)
+    return render_template('generated.html', data=tex_html, num=num, type=type,
+                           xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats)
 
 
 @app.errorhandler(404)

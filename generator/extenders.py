@@ -25,10 +25,14 @@ def two_const(n_min=-20, n_max=20, floats=False, roots=False):
                 floats = False
             else:
                 roots = False
+    if c1 == int(c1):
+        c1 = int(c1)
+    if c2 == int(c2):
+        c2 = int(c2)
     return c1, c2
 
 
-def create_var(can_root=True, can_other_letters=True):
+def create_var(can_root=False, can_other_letters=False):
     """
     Create a variable
     :param can_root: x -> sqrt(x)
@@ -59,7 +63,7 @@ def extender_1(expr, n_min=-20, n_max=20, floats=False, roots=False):
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var()
+    x = create_var(can_root=roots)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr * a).expand() / b
@@ -92,7 +96,7 @@ def extender_2(expr, n_min=-20, n_max=20, floats=False, roots=False):
                 floats = False
             else:
                 roots = False
-    x = create_var()
+    x = create_var(can_root=roots)
     a = x - S(c1)
     b = x + S(c1)
     first = (expr * b).expand() / a
@@ -115,7 +119,7 @@ def extender_3(expr, n_min=-20, n_max=20, floats=False, roots=False):
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var()
+    x = create_var(can_root=roots)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr / 2 * a).expand() / a
@@ -138,7 +142,7 @@ def extender_4(expr, n_min=-20, n_max=20, floats=False, roots=False):
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var()
+    x = create_var(can_root=roots)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr * a).expand() / (b ** 2)
@@ -164,7 +168,7 @@ def extender_5(expr, n_min=-20, n_max=20, floats=False, roots=False):
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var()
+    x = create_var(can_root=roots)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr * a).expand() / b
@@ -190,7 +194,7 @@ def extender_6(expr, n_min=-20, n_max=20, floats=False, roots=False):
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var()
+    x = create_var(can_root=roots)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr * a).expand()

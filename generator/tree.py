@@ -33,12 +33,14 @@ def get_coeffs(expr, for_print=False):
     elif type(expr) == add.Add:
         t = 'add'
         arr = expr.as_coeff_add()
+        res = [arr[0]] + list(arr[1]) if arr[0] != 0 else list(arr[1])
     elif type(expr) == mul.Mul:
         t = 'mul'
         arr = expr.as_coeff_mul()
+        res = [arr[0]] + list(arr[1]) if arr[0] != 1 else list(arr[1])
     else:
         return {'unknown': [expr]}
-    return {t: [arr[0]] + list(arr[1])}
+    return {t: res}
 
 
 def make_step(arr, for_print=False):
@@ -87,3 +89,27 @@ def parse_tree(d):
     if 'unknown' in d:
         raise ValueError('unknown node found')
     raise ValueError('Unknown type {}'.format(d.keys()[0]))
+
+
+def estimate_complexity(tree):
+    """
+    Estimates the complexity of the tree
+    :param tree: tree node
+    :return: the number representing the level of complexity
+    """
+    comp = 0
+
+    if type(tree) is dict:
+        for memb in tree.values():
+            if type(memb) is list:
+                for subtree in memb:
+                    comp += estimate_complexity(subtree)
+            else:
+                comp += 1
+    else:
+        comp += 1
+    return comp
+
+
+
+

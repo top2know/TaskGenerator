@@ -95,7 +95,7 @@ def remove_float_one(expr):
     """
     if type(expr) == mul.Mul:
         return expr.as_coeff_mul()[0] * np.prod(
-            [remove_float_one(val) if val != 1.0 else 1 for val in expr.as_coeff_mul()[1]])
+            [remove_float_one(val) if val != S(1.0) else 1 for val in expr.as_coeff_mul()[1]])
     if type(expr) == add.Add:
         return expr.as_coeff_add()[0] + np.sum([remove_float_one(val) for val in expr.as_coeff_add()[1]])
     return expr
@@ -153,6 +153,18 @@ def str_tree(tree, level=0):
         return s
 
 
+def make_pretty(expr, check=False):
+    """
+    Combines all methods of making expression pretty
+    :param expr: expression
+    :return: prettier expression
+    """
+
+    p1 = make_fractions_pretty(expr, check)
+    p2 = remove_float_one(p1)
+    return p2
+
+
 def print_tex_on_html(tasks):
     """
     Prints expressions on HTML page
@@ -167,7 +179,7 @@ def print_tex_on_html(tasks):
     """
     for i, res in enumerate(tasks):
         s += """katex.render(\"{}\", document.getElementById(\"{}\"));
-    """.format(print_my_latex_html(make_fractions_pretty(res, check=False)).replace('\\', '\\\\'), i)
+    """.format(print_my_latex_html(make_pretty(res, check=False)).replace('\\', '\\\\'), i)
     s += """}}
     </script>"""
     return s

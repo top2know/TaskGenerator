@@ -48,6 +48,18 @@
     {% else %}
     <input name="rnd" id="rnd" value="42" size="4" required pattern="[0-9]{1,5}"><br>
     {% endif %}
+    <strong>Разрешить корни </strong>
+    {% if roots %}
+    <input type="checkbox" name="roots" id="roots" checked><br>
+    {% else %}
+    <input type="checkbox" name="roots" id="roots"><br>
+    {% endif %}
+    <strong>Разрешить вещественные числа </strong>
+    {% if floats %}
+    <input type="checkbox" name="floats" id="floats" checked><br>
+    {% else %}
+    <input type="checkbox" name="floats" id="floats"><br>
+    {% endif %}
     <button>Сгенерировать задания</button><br>
 </form>
 <br>

@@ -1,6 +1,6 @@
 import unittest
 
-from app import app
+from app import app, parse_sympy, estimate_complexity, parse_tree
 from generator.generators import *
 from printer.printing import *
 
@@ -67,8 +67,19 @@ class UnitTest(unittest.TestCase):
     def test_routes(self):
         with app.test_client() as client:
             self.assertEqual('200 OK', client.get('/news').status)
-            self.assertEqual('308 PERMANENT REDIRECT', client.get('/tree').status)
-            self.assertEqual('200 OK', client.get('/tree/1').status)
+            self.assertEqual('200 OK', client.get('/tree').status)
+
+    def test_tree_complexity(self):
+        x = self.x
+        self.assertEqual(1, estimate_complexity(parse_sympy(1)))
+        self.assertEqual(2, estimate_complexity(parse_sympy(x + 1)))
+        self.assertEqual(4, estimate_complexity(parse_sympy(x**2 + x + 1)))
+
+    def test_tree(self):
+        x = self.x
+        expr = (x**3 + 2*x**2)/(x+3)
+        self.assertEqual(expr, parse_tree(parse_sympy(expr)))
+        self.assertEqual(8, estimate_complexity(parse_sympy(expr)))
 
 
 if __name__ == '__main__':
