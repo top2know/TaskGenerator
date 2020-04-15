@@ -37,9 +37,14 @@ def task_generator(mode):
     return tasks
 
 
-def task_generator_new(type, xmin, xmax, roots=False, floats=False):
-    x = create_var(can_other_letters=False, can_root=roots)
-    tasks = [generator(x + np.random.randint(xmin, xmax+1), m, xmin, xmax, roots=roots, floats=floats) for m in type]
+def task_generator_new(type, xmin, xmax, roots=False, floats=False, can_other_letters=False, vars=1):
+    x, y = create_var(can_other_letters=can_other_letters, can_root=roots, count=2)
+    if vars == 1:
+        tasks = [generator(x + np.random.randint(xmin, xmax + 1), m, xmin, xmax, roots=roots, floats=floats,
+                           other_letters=can_other_letters) for m in type]
+    elif vars == 2:
+        tasks = [generator(x + y, m, xmin, xmax, roots=roots, floats=floats,
+                           other_letters=True) for m in type]
     return tasks
 
 
@@ -92,15 +97,19 @@ def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
     rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
     roots = 'roots' in arg
     floats = 'floats' in arg
+    check_complex = 'check_complex' in arg
+    count = 2 if 'second_var' in arg else 1
     if xmin >= xmax:
-        return render_template('generated.html', num=num, type=type, xmin=xmin,
-                               xmax=xmax, rnd=rnd, roots=roots, floats=floats)
+        return render_template('generated.html', num=num, type=type,
+                               xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
+                               check_complex=check_complex, second_var='second_var' in arg)
     np.random.seed(rnd)
-    var = [type]*num if type != 42 else list(range(num))
-    tasks = task_generator_new(var, xmin, xmax, roots, floats)
-    tex_html = print_tex_on_html(tasks)
+    var = [type] * num if type != 42 else list(range(num))
+    tasks = task_generator_new(var, xmin, xmax, roots, floats, vars=count)
+    tex_html = print_tex_on_html(tasks, check_complex)
     return render_template('generated.html', data=tex_html, num=num, type=type,
-                           xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats)
+                           xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
+                           check_complex=check_complex, second_var='second_var' in arg)
 
 
 @app.errorhandler(404)

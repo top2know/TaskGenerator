@@ -4,6 +4,8 @@ from sympy.printing.latex import LatexPrinter
 from sympy.core.function import _coeff_isneg
 import numpy as np
 
+from generator.tree import estimate_complexity, parse_sympy
+
 
 class MyLatexPrinter(LatexPrinter):
     """Class for better-looking printing."""
@@ -165,20 +167,22 @@ def make_pretty(expr, check=False):
     return p2
 
 
-def print_tex_on_html(tasks):
+def print_tex_on_html(tasks, check_complex=False):
     """
     Prints expressions on HTML page
     :param tasks: list of expressions
     :return: HTML code
     """
 
-    s = "\n".join(["<div id = \"{}\"></div><br>".format(i) for i in range(len(tasks))])
+    s = "\n".join(["<div id = \"{}\">The expression was overcomplex</div><br>".format(i) for i in range(len(tasks))])
     s += """<script>
     window.onload = function()
     {{
     """
     for i, res in enumerate(tasks):
-        s += """katex.render(\"{}\", document.getElementById(\"{}\"));
+        exp = make_pretty(res, check=False)
+        if not check_complex or estimate_complexity(parse_sympy(exp)) < 42:
+            s += """katex.render(\"{}\", document.getElementById(\"{}\"));
     """.format(print_my_latex_html(make_pretty(res, check=False)).replace('\\', '\\\\'), i)
     s += """}}
     </script>"""

@@ -6,3 +6,4 @@ node_modules/*
 .DS_Store
 printer/__pycache__/*
 generator/__pycache__/*
+tests/__pycache__/*

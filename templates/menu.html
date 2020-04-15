@@ -60,6 +60,18 @@
     {% else %}
     <input type="checkbox" name="floats" id="floats"><br>
     {% endif %}
+    <strong>Разрешить две переменные </strong>
+    {% if second_var %}
+    <input type="checkbox" name="second_var" id="second_var" checked><br>
+    {% else %}
+    <input type="checkbox" name="second_var" id="second_var"><br>
+    {% endif %}
+    <strong>Проверять на сложность </strong>
+    {% if check_complex %}
+    <input type="checkbox" name="check_complex" id="check_complex" checked><br>
+    {% else %}
+    <input type="checkbox" name="check_complex" id="check_complex"><br>
+    {% endif %}
     <button>Сгенерировать задания</button><br>
 </form>
 <br>

@@ -32,24 +32,29 @@ def two_const(n_min=-20, n_max=20, floats=False, roots=False):
     return c1, c2
 
 
-def create_var(can_root=False, can_other_letters=False):
+def create_var(can_root=False, can_other_letters=False, count=1):
     """
     Create a variable
+    :param count: number of variables
     :param can_root: x -> sqrt(x)
     :param can_other_letters: if variable can be not 'x'
     :return: variable
     """
+    options = ['x', 'y', 'a']
     if can_other_letters:
-        letter = np.random.choice(['x', 'y', 'a'])
+        np.random.shuffle(options)
+    letters = options[:count]
+    v = [symbols(letter) for letter in letters]
+    for i in range(len(v)):
+        if can_root and np.random.rand() > 0.5:
+            v[i] = sqrt(v[i])
+    if count == 1:
+        return v[0]
     else:
-        letter = 'x'
-    v = symbols(letter)
-    if can_root and np.random.rand() > 0.5:
-        v = sqrt(v)
-    return v
+        return v[0], v[1]
 
 
-def extender_1(expr, n_min=-20, n_max=20, floats=False, roots=False):
+def extender_1(expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
     """
     expr -> (1+(b-a)/a)*((expr*a)/b)
     :param expr: expression
@@ -57,13 +62,14 @@ def extender_1(expr, n_min=-20, n_max=20, floats=False, roots=False):
     :param n_max: max value of const
     :param floats: enable floats
     :param roots: enable roots
+    :param other_letters: enable not 'x' letters
     :return: complicated expression
     """
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var(can_root=roots)
+    x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr * a).expand() / b
@@ -72,13 +78,14 @@ def extender_1(expr, n_min=-20, n_max=20, floats=False, roots=False):
     return res
 
 
-def extender_2(expr, n_min=-20, n_max=20, floats=False, roots=False):
+def extender_2(expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
     """expr -> ((expr*b)/a) / (k/b + k/a + (x^2+k^2)/(a*b))
     :param expr: expression
     :param n_min: min value of const
     :param n_max: max value of const
     :param floats: enable floats
     :param roots: enable roots
+    :param other_letters: enable not 'x' letters
     :return: complicated expression
     """
     if n_min >= n_max:
@@ -96,7 +103,7 @@ def extender_2(expr, n_min=-20, n_max=20, floats=False, roots=False):
                 floats = False
             else:
                 roots = False
-    x = create_var(can_root=roots)
+    x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x - S(c1)
     b = x + S(c1)
     first = (expr * b).expand() / a
@@ -106,20 +113,21 @@ def extender_2(expr, n_min=-20, n_max=20, floats=False, roots=False):
     return res
 
 
-def extender_3(expr, n_min=-20, n_max=20, floats=False, roots=False):
+def extender_3(expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
     """expr -> ((expr*a/2)/a)+(expr*a*b)/(2*a*b)
     :param expr: expression
     :param n_min: min value of const
     :param n_max: max value of const
     :param floats: enable floats
     :param roots: enable roots
+    :param other_letters: enable not 'x' letters
     :return: complicated expression
     """
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var(can_root=roots)
+    x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr / 2 * a).expand() / a
@@ -129,20 +137,21 @@ def extender_3(expr, n_min=-20, n_max=20, floats=False, roots=False):
     return res
 
 
-def extender_4(expr, n_min=-20, n_max=20, floats=False, roots=False):
+def extender_4(expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
     """expr -> (cb+b(b-ac)/a)*((expr*a)/b^2)
     :param expr: expression
     :param n_min: min value of const
     :param n_max: max value of const
     :param floats: enable floats
     :param roots: enable roots
+    :param other_letters: enable not 'x' letters
     :return: complicated expression
     """
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var(can_root=roots)
+    x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr * a).expand() / (b ** 2)
@@ -155,20 +164,21 @@ def extender_4(expr, n_min=-20, n_max=20, floats=False, roots=False):
     return res
 
 
-def extender_5(expr, n_min=-20, n_max=20, floats=False, roots=False):
+def extender_5(expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
     """expr -> (c+(b-ca)/a)*((expr*a)/b)
     :param expr: expression
     :param n_min: min value of const
     :param n_max: max value of const
     :param floats: enable floats
     :param roots: enable roots
+    :param other_letters: enable not 'x' letters
     :return: complicated expression
     """
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var(can_root=roots)
+    x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr * a).expand() / b
@@ -181,20 +191,21 @@ def extender_5(expr, n_min=-20, n_max=20, floats=False, roots=False):
     return res
 
 
-def extender_6(expr, n_min=-20, n_max=20, floats=False, roots=False):
+def extender_6(expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
     """expr -> (c/b+(1-ca/b)/a)*(expr*a)
     :param expr: expression
     :param n_min: min value of const
     :param n_max: max value of const
     :param floats: enable floats
     :param roots: enable roots
+    :param other_letters: enable not 'x' letters
     :return: complicated expression
     """
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
     # TODO: in place of a and b there can be any function
-    x = create_var(can_root=roots)
+    x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
     first = (expr * a).expand()
