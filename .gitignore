@@ -1,9 +1,7 @@
-venv/*
-.idea/*
-__pycache__/*
-out/*
-node_modules/*
 .DS_Store
-printer/__pycache__/*
-generator/__pycache__/*
-tests/__pycache__/*
+.idea/*
+node_modules/*
+out/*
+venv/*
+__pycache__/*
+*/__pycache__/*

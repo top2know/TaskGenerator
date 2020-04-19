@@ -1,5 +1,4 @@
 Flask
 gunicorn
-pdflatex
 sympy
 numpy

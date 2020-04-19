@@ -1,5 +1,4 @@
 from sympy.core import *
-from pdflatex import PDFLaTeX
 from sympy.printing.latex import LatexPrinter
 from sympy.core.function import _coeff_isneg
 import numpy as np
@@ -53,7 +52,7 @@ def print_my_latex(expr):
 def print_my_latex_html(expr):
     """
     LaTeX print for HTML usage (KaTEX)
-    :param expr:
+    :param expr:expression
     :return:
     """
     return MyLatexPrinter().doprint(expr)
@@ -103,32 +102,6 @@ def remove_float_one(expr):
     return expr
 
 
-def expr_to_pdf(res, name, keep_file=False):
-    """
-    Transforms list of expressions to PDF
-    :param res: list of expressions
-    :param name: File name
-    :param keep_file: Save file locally
-    :return: PDF file
-    """
-    content = r"""
-\documentclass[a4paper]{}
-\begin{}
-{}
-\end{}
-""".format('{article}', '{document}',
-           '\n\\newline\n'.join([print_my_latex(make_fractions_pretty(item, check=False)) for item in res]), '{document}')
-
-    with open('temp.tex', 'w') as f:
-        f.write(content)
-    pdfl = PDFLaTeX.from_texfile('temp.tex')
-    pdfl.set_pdf_filename(name)
-    pdfl.set_output_directory('out')
-    pdfl.set_jobname(name)
-    pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=keep_file)
-    return pdf, log, completed_process
-
-
 s = """"""
 
 
@@ -159,6 +132,7 @@ def make_pretty(expr, check=False):
     """
     Combines all methods of making expression pretty
     :param expr: expression
+    :param check: debug purposes
     :return: prettier expression
     """
 
@@ -170,6 +144,7 @@ def make_pretty(expr, check=False):
 def print_tex_on_html(tasks, check_complex=False):
     """
     Prints expressions on HTML page
+    :param check_complex: check complexity of SymPy expression
     :param tasks: list of expressions
     :return: HTML code
     """
@@ -187,3 +162,4 @@ def print_tex_on_html(tasks, check_complex=False):
     s += """}}
     </script>"""
     return s
+
