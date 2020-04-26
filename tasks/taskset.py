@@ -37,12 +37,13 @@ class TaskSet:
         """
         self.taskset = [[task.get(params) for task in self.tasks] for _ in range(num)]
 
-    def to_html(self, num=0, check_complex=False):
+    def to_html(self, num=0, check_complex=False, show_answers=False):
         """
         Turns taskset to HTML
         :param num: number of variant
         :param check_complex: check complexity of expression
+        :param show_answers: show answers for tasks
         :return: HTML representation
         """
-        return print_tex_on_html([task.get_task() for task in self.taskset[num]], check_complex)
+        return print_tex_on_html(self.taskset[num], check_complex, show_answers)
 

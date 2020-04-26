@@ -53,14 +53,17 @@ def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
     xmin = int(arg.get('xmin')) if 'xmin' in arg else xmin
     xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
     rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
+    text = arg.get('text')
     roots = 'roots' in arg
     floats = 'floats' in arg
     check_complex = 'check_complex' in arg
     count = 2 if 'second_var' in arg else 1
+    show_answers = 'show_answers' in arg
     if xmin >= xmax:
-        return render_template('generated.html', num=num, type=type,
+        return render_template('menu.html', num=num, type=type,
                                xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
-                               check_complex=check_complex, second_var='second_var' in arg)
+                               check_complex=check_complex, second_var='second_var' in arg,
+                               show_answers=show_answers, text=text)
     np.random.seed(rnd)
     var = [type] * num if type != 42 else list(range(num))
     tasks = [SimplifyTask(var=var[i]) for i in range(num)]
@@ -70,12 +73,14 @@ def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
             'xmax': xmax,
             'roots': roots,
             'floats': floats,
-            'vars': count
+            'vars': count,
+            'text': text
         })
-    tex_html = taskset.to_html(0, check_complex)
+    tex_html = taskset.to_html(0, check_complex, show_answers)
     return render_template('generated.html', data=tex_html, num=num, type=type,
                            xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
-                           check_complex=check_complex, second_var='second_var' in arg)
+                           check_complex=check_complex, second_var='second_var' in arg,
+                           show_answers=show_answers, text=text)
 
 
 @app.errorhandler(404)

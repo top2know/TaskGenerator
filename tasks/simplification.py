@@ -5,7 +5,7 @@ from tasks.task import AbstractTask, Task
 import numpy as np
 
 
-def extract_val(arr, key, default):
+def extract_val(arr, key, default=None):
     """
     Method for extracting params from dict
     :param arr: dict
@@ -40,6 +40,7 @@ class SimplifyTask(AbstractTask):
         floats = extract_val(params, 'floats', False)
         other_letters = extract_val(params, 'other_letters', False)
         vars = extract_val(params, 'vars', 1)
+        text = extract_val(params, 'text')
         x, y = create_var(can_other_letters=other_letters, can_root=roots, count=2)
         if vars == 1:
             answer = x + np.random.randint(xmin, xmax + 1)
@@ -48,11 +49,11 @@ class SimplifyTask(AbstractTask):
             answer = x + y
         expr = generator(answer, self.var, xmin, xmax, roots=roots, floats=floats,
                          other_letters=other_letters)
-        self.task = Task('', expr, answer)
+        self.task = Task(text, expr, answer)
 
     def to_html(self, check_complex=False):
         """
-        Turns taskset to HTML
+        Turns task to HTML
         :param check_complex: check complexity of expression
         :return: HTML representation
         """

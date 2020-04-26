@@ -49,13 +49,16 @@ def print_my_latex(expr):
     return '\[' + MyLatexPrinter().doprint(expr) + '\]'
 
 
-def print_my_latex_html(expr):
+def print_my_latex_html(expr, answers=None):
     """
     LaTeX print for HTML usage (KaTEX)
     :param expr:expression
     :return:
     """
-    return MyLatexPrinter().doprint(expr)
+    if answers:
+        return MyLatexPrinter().doprint(Eq(expr, answers))
+    else:
+        return MyLatexPrinter().doprint(expr)
 
 
 def make_fractions_pretty(expr, check=True):
@@ -141,15 +144,18 @@ def make_pretty(expr, check=False):
     return p2
 
 
-def print_tex_on_html(tasks, check_complex=False):
+def print_tex_on_html(taskset, check_complex=False, show_answers=False):
     """
     Prints expressions on HTML page
     :param check_complex: check complexity of SymPy expression
-    :param tasks: list of expressions
+    :param taskset: list of Tasks
+    :param show_answers: show answers for tasks
     :return: HTML code
     """
-
-    s = "\n".join(["<div id = \"{}\">The expression was overcomplex</div><br>".format(i) for i in range(len(tasks))])
+    texts = [task.get_condition() for task in taskset]
+    tasks = [task.get_task() for task in taskset]
+    answers = [task.get_answer() for task in taskset]
+    s = "\n".join(["{}<div id = \"{}\">The expression was overcomplex</div><br>".format(texts[i] + '\n' if texts[i] else '', i) for i in range(len(tasks))])
     s += """<script>
     window.onload = function()
     {{
@@ -157,7 +163,11 @@ def print_tex_on_html(tasks, check_complex=False):
     for i, res in enumerate(tasks):
         exp = make_pretty(res, check=False)
         if not check_complex or estimate_complexity(parse_sympy(exp)) < 42:
-            s += """katex.render(\"{}\", document.getElementById(\"{}\"));
+            if show_answers:
+                s += """katex.render(\"{}\", document.getElementById(\"{}\"));
+    """.format(print_my_latex_html(make_pretty(res, check=False), answers[i]).replace('\\', '\\\\'), i)
+            else:
+                s += """katex.render(\"{}\", document.getElementById(\"{}\"));
     """.format(print_my_latex_html(make_pretty(res, check=False)).replace('\\', '\\\\'), i)
     s += """}}
     </script>"""
