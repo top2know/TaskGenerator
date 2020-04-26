@@ -50,6 +50,9 @@ def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
     arg = request.args
     num = int(arg.get('num')) if 'num' in arg else num
     type = int(arg.get('type')) if 'type' in arg else type
+    #todo remove
+    if type > 42:
+        type = 42
     xmin = int(arg.get('xmin')) if 'xmin' in arg else xmin
     xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
     rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
@@ -65,7 +68,7 @@ def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
                                check_complex=check_complex, second_var='second_var' in arg,
                                show_answers=show_answers, text=text)
     np.random.seed(rnd)
-    var = [type] * num if type != 42 else list(range(num))
+    var = [type] * num if type != 42 else np.arange(num) % 42 #todo remove
     tasks = [SimplifyTask(var=var[i]) for i in range(num)]
     taskset = TaskSet(tasks, seed=rnd)
     taskset.generate(params={
@@ -86,6 +89,11 @@ def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('500.html'), 500
 
 
 if __name__ == '__main__':

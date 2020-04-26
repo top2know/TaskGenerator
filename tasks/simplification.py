@@ -57,4 +57,4 @@ class SimplifyTask(AbstractTask):
         :param check_complex: check complexity of expression
         :return: HTML representation
         """
-        return print_tex_on_html([self.task.task], check_complex)
+        return print_tex_on_html([self.task], check_complex)
