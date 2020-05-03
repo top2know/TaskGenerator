@@ -1,8 +1,10 @@
 import unittest
 
 from app import app, parse_sympy, estimate_complexity, parse_tree
+from generator.SimplifyGenerator import SimplifyGenerator
 from generator.generators import *
 from printer.printing import *
+from generator.tree import Tree, create_tree
 
 
 class UnitTest(unittest.TestCase):
@@ -80,6 +82,15 @@ class UnitTest(unittest.TestCase):
         expr = (x**3 + 2*x**2)/(x+3)
         self.assertEqual(expr, parse_tree(parse_sympy(expr)))
         self.assertEqual(8, estimate_complexity(parse_sympy(expr)))
+        tree = create_tree(expr)
+        self.assertEqual(8, tree.get_complexity())
+        self.assertEqual(expr, tree.get_expr())
+        print(tree.print())
+
+    def test_generator(self):
+        generator = SimplifyGenerator(35, 50)
+        print(generator.generate(self.x + 1))
+        print(dir(generator))
 
 
 if __name__ == '__main__':

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+    <title>Сгенерировать задания</title>
+</head>
+<body>
+{% extends 'menu_new.html' %}
+{% block tasks %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
+{{ data|safe }}
+{% endblock %}
+</body>
+</html>

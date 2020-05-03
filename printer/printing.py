@@ -3,8 +3,6 @@ from sympy.printing.latex import LatexPrinter
 from sympy.core.function import _coeff_isneg
 import numpy as np
 
-from generator.tree import estimate_complexity, parse_sympy
-
 
 class MyLatexPrinter(LatexPrinter):
     """Class for better-looking printing."""
@@ -162,7 +160,7 @@ def print_tex_on_html(taskset, check_complex=False, show_answers=False):
     """
     for i, res in enumerate(tasks):
         exp = make_pretty(res, check=False)
-        if not check_complex or estimate_complexity(parse_sympy(exp)) < 42:
+        if not check_complex or create_tree(exp).get_complexity() < 42:
             if show_answers:
                 s += """katex.render(\"{}\", document.getElementById(\"{}\"));
     """.format(print_my_latex_html(make_pretty(res, check=False), answers[i]).replace('\\', '\\\\'), i)
