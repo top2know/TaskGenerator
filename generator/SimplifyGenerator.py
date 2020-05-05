@@ -1,5 +1,5 @@
-from generator.tree import estimate_complexity, parse_sympy, create_tree
-from generator.generators import generator
+from generator.extenders import Extender
+from generator.tree import create_tree
 import numpy as np
 from sympy import simplify
 
@@ -9,10 +9,12 @@ class SimplifyGenerator:
     def __init__(self, min_complexity=20, max_complexity=40):
         self.min_complexity = min_complexity
         self.max_complexity = max_complexity
+        self.extender = Extender()
 
-    @staticmethod
-    def extend(expr, xmin, xmax, other_letters):
-        return generator(expr, mode=np.random.randint(0, 6), nmin=xmin, nmax=xmax, other_letters=other_letters)
+    def extend(self, expr, xmin, xmax, other_letters):
+        d = [f for f in self.extender.__dir__() if not f.endswith('__')]
+        rnd = np.random.randint(0, len(d))
+        return getattr(self.extender, d[rnd])(expr, n_min=xmin, n_max=xmax, other_letters=other_letters)
 
     @staticmethod
     def simplify(expr):
@@ -39,4 +41,4 @@ class SimplifyGenerator:
                 ans = self.simplify(ans)
             est = create_tree(ans).get_complexity()
             counter += 1
-        return ans
+        return ans, est

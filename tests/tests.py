@@ -1,6 +1,6 @@
 import unittest
 
-from app import app, parse_sympy, estimate_complexity, parse_tree
+from app import app
 from generator.SimplifyGenerator import SimplifyGenerator
 from generator.generators import *
 from printer.printing import *
@@ -70,18 +70,18 @@ class UnitTest(unittest.TestCase):
         with app.test_client() as client:
             self.assertEqual('200 OK', client.get('/news').status)
             self.assertEqual('200 OK', client.get('/tree').status)
+            self.assertEqual('200 OK', client.get('/menu').status)
+            self.assertEqual('200 OK', client.get('/generate_taskset').status)
 
     def test_tree_complexity(self):
         x = self.x
-        self.assertEqual(1, estimate_complexity(parse_sympy(1)))
-        self.assertEqual(2, estimate_complexity(parse_sympy(x + 1)))
-        self.assertEqual(4, estimate_complexity(parse_sympy(x**2 + x + 1)))
+        self.assertEqual(1, create_tree(1).get_complexity())
+        self.assertEqual(2, create_tree(x + 1).get_complexity())
+        self.assertEqual(4, create_tree(x**2 + x + 1).get_complexity())
 
     def test_tree(self):
         x = self.x
         expr = (x**3 + 2*x**2)/(x+3)
-        self.assertEqual(expr, parse_tree(parse_sympy(expr)))
-        self.assertEqual(8, estimate_complexity(parse_sympy(expr)))
         tree = create_tree(expr)
         self.assertEqual(8, tree.get_complexity())
         self.assertEqual(expr, tree.get_expr())
@@ -90,7 +90,14 @@ class UnitTest(unittest.TestCase):
     def test_generator(self):
         generator = SimplifyGenerator(35, 50)
         print(generator.generate(self.x + 1))
-        print(dir(generator))
+        ext = Extender()
+        g = ext.extender_2_distinct(self.x + 1)
+        print(g)
+        self.assertEqual(self.x + 1, simplify(g))
+        #exp = sympify('sin(x^2)+ln(k*x)+1')
+        #print(generator.generate(exp))
+        #print(create_tree(exp).get_json())
+        #print(create_tree(exp).get_expr())
 
 
 if __name__ == '__main__':

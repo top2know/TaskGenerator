@@ -47,14 +47,15 @@ def print_my_latex(expr):
     return '\[' + MyLatexPrinter().doprint(expr) + '\]'
 
 
-def print_my_latex_html(expr, answers=None):
+def print_my_latex_html(expr, answer=None):
     """
     LaTeX print for HTML usage (KaTEX)
-    :param expr:expression
+    :param expr: expression
+    :param answer: simplified expression
     :return:
     """
-    if answers:
-        return MyLatexPrinter().doprint(Eq(expr, answers))
+    if answer:
+        return MyLatexPrinter().doprint(Eq(expr, answer))
     else:
         return MyLatexPrinter().doprint(expr)
 
@@ -142,10 +143,9 @@ def make_pretty(expr, check=False):
     return p2
 
 
-def print_tex_on_html(taskset, check_complex=False, show_answers=False):
+def print_tex_on_html(taskset, show_answers=False):
     """
     Prints expressions on HTML page
-    :param check_complex: check complexity of SymPy expression
     :param taskset: list of Tasks
     :param show_answers: show answers for tasks
     :return: HTML code
@@ -159,14 +159,12 @@ def print_tex_on_html(taskset, check_complex=False, show_answers=False):
     {{
     """
     for i, res in enumerate(tasks):
-        exp = make_pretty(res, check=False)
-        if not check_complex or create_tree(exp).get_complexity() < 42:
-            if show_answers:
-                s += """katex.render(\"{}\", document.getElementById(\"{}\"));
-    """.format(print_my_latex_html(make_pretty(res, check=False), answers[i]).replace('\\', '\\\\'), i)
-            else:
-                s += """katex.render(\"{}\", document.getElementById(\"{}\"));
-    """.format(print_my_latex_html(make_pretty(res, check=False)).replace('\\', '\\\\'), i)
+        if show_answers:
+            s += """katex.render(\"{}\", document.getElementById(\"{}\"));
+""".format(print_my_latex_html(make_pretty(res, check=False), answers[i]).replace('\\', '\\\\'), i)
+        else:
+            s += """katex.render(\"{}\", document.getElementById(\"{}\"));
+""".format(print_my_latex_html(make_pretty(res, check=False)).replace('\\', '\\\\'), i)
     s += """}}
     </script>"""
     return s

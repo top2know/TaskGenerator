@@ -1,3 +1,4 @@
+from generator.simple_extenders import simple_extender_1
 from generator.utils import *
 
 
@@ -37,19 +38,7 @@ def extender_2(expr, n_min=-20, n_max=20, floats=False, roots=False, other_lette
     """
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
-    c1 = 0
-    while c1 == 0:
-        if not floats and not roots:
-            c1 = np.random.randint(n_min, n_max + 1)
-        elif floats and not roots:
-            c1 = np.round((n_max - n_min) * np.random.random() + n_min, 1)
-        elif not floats and roots:
-            c1 = (-1) ** (np.random.randint(0, 2)) * sqrt(np.random.randint(0, n_max ** 2 + 1))
-        else:
-            if np.random.random() > 0.5:
-                floats = False
-            else:
-                roots = False
+    c1 = one_const(n_min, n_max, floats, roots)
     x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x - S(c1)
     b = x + S(c1)
@@ -163,3 +152,73 @@ def extender_6(expr, n_min=-20, n_max=20, floats=False, roots=False, other_lette
     res = first * second
     # assert (res.simplify() == expr.simplify())
     return res
+
+
+class Extender:
+
+    def extender_1(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        return extender_1(expr, n_min, n_max, floats, roots, other_letters)
+
+    def extender_2(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        return extender_2(expr, n_min, n_max, floats, roots, other_letters)
+
+    def extender_3(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        return extender_3(expr, n_min, n_max, floats, roots, other_letters)
+
+    def extender_4(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        return extender_4(expr, n_min, n_max, floats, roots, other_letters)
+
+    def extender_5(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        return extender_5(expr, n_min, n_max, floats, roots, other_letters)
+
+    def extender_6(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        return extender_6(expr, n_min, n_max, floats, roots, other_letters)
+
+    def simple_extender_1(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        return simple_extender_1(expr, n_min, n_max, floats, roots, other_letters)
+
+    def extender_1_distinct(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        d = [f for f in self.__dir__() if not f.endswith('__') and not f.endswith('distinct')]
+        if type(expr) != add.Add:
+            return getattr(self, d[np.random.randint(0, len(d))])(expr, n_min, n_max, floats, roots, other_letters)
+        modes = np.random.randint(0, len(d), len(expr.as_coeff_add()[1]))
+        return np.sum(
+            [getattr(self, d[modes[i]])(v, n_min=n_min, n_max=n_max, floats=floats, roots=roots,
+                                        other_letters=other_letters)
+             for i, v in enumerate(expr.as_coeff_add()[1])]) + \
+               expr.as_coeff_add()[0]
+
+    def extender_2_distinct(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
+        d = [f for f in self.__dir__() if not f.endswith('__') and not f.endswith('distinct')]
+        if type(expr) != add.Add:
+            return getattr(self, d[np.random.randint(0, len(d))])(expr, n_min, n_max, floats, roots, other_letters)
+        modes = np.random.randint(0, len(d), 2)
+        count, additions = expr.as_coeff_add()[0], expr.as_coeff_add()[1]
+        rnd = np.random.randint(n_min, n_max)
+        while rnd == count or rnd == 0:
+            rnd = np.random.randint(n_min, n_max)
+        a = rnd
+        b = count - rnd
+        for memb in additions:
+            if type(memb) == mul.Mul:
+                coeff = memb.as_coeff_mul()[0]
+                rnd = np.random.randint(n_min, n_max)
+                while rnd == coeff or rnd == 0:
+                    rnd = np.random.randint(n_min, n_max)
+                a += rnd / coeff * memb
+                b += (coeff - rnd) / coeff * memb
+            elif type(memb) == Symbol:
+                rnd = np.random.randint(n_min, n_max)
+                a += rnd * memb
+                b -= (rnd - 1) * memb
+            elif np.random.rand() > 0.5:
+                a += memb
+            else:
+                b += memb
+        return getattr(self, d[modes[0]])(a, n_min=n_min, n_max=n_max,
+                                          floats=floats, roots=roots,
+                                          other_letters=other_letters) + getattr(self, d[modes[1]])(b, n_min=n_min,
+                                                                                                    n_max=n_max,
+                                                                                                    floats=floats,
+                                                                                                    roots=roots,
+                                                                                                    other_letters=other_letters)

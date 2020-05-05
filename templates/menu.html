@@ -5,13 +5,6 @@
     <title>Сгенерировать задания</title>
     <link rel="stylesheet" href="../static/styles/input_style.css">
 
-    <script>
-        function get_tasks() {
-            var num = document.getElementById("num").value;
-            var type = document.getElementById("type");
-            alert('done')
-        }
-  </script>
 </head>
 <body>
 {% extends 'base.html' %}
@@ -24,11 +17,17 @@
     {% else %}
     <input name="num" id="num" value="5" size="4" required pattern="[0-9]{1,2}"><br>
     {% endif %}
-    <strong>Введите номер метода генерации (от 0 до 41, 42 - напечатает первые n методов, где n - количество заданий) </strong>
-    {% if type %}
-    <input name="type" id="type" value={{ type }} size="4" required pattern="[0-9]{1,2}"><br>
+    <strong>Введите минимальную сложность </strong>
+    {% if min_comp %}
+    <input name="min_comp" id="min_comp" value={{ min_comp }} size="4" required pattern="[0-9]+"><br>
     {% else %}
-    <input name="type" id="type" value="42" size="4" required pattern="[0-9]{1,2}"><br>
+    <input name="min_comp" id="min_comp" value="10" size="4" required pattern="[0-9]+"><br>
+    {% endif %}
+    <strong>Введите максимальную сложность </strong>
+    {% if max_comp %}
+    <input name="max_comp" id="max_comp" value={{ max_comp }} size="4" required pattern="[0-9]+"><br>
+    {% else %}
+    <input name="max_comp" id="max_comp" value="30" size="4" required pattern="[0-9]+"><br>
     {% endif %}
     <strong>Введите текст задания </strong>
     <input name="text" id="text" value="{{ text }}" size="40"><br>
@@ -73,12 +72,6 @@
     <input type="checkbox" name="show_answers" id="show_answers" checked><br>
     {% else %}
     <input type="checkbox" name="show_answers" id="show_answers"><br>
-    {% endif %}
-    <strong>Проверять на сложность </strong>
-    {% if check_complex %}
-    <input type="checkbox" name="check_complex" id="check_complex" checked><br>
-    {% else %}
-    <input type="checkbox" name="check_complex" id="check_complex"><br>
     {% endif %}
     <button>Сгенерировать задания</button><br>
 </form>

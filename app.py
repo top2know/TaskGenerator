@@ -4,7 +4,7 @@ from generator.tree import *
 from printer.printing import *
 from sympy import *
 
-from tasks.simplification import SimplifyTask, SimplifyTaskNew
+from tasks.simplification import SimplifyTask
 from tasks.taskset import TaskSet
 
 app = Flask(__name__)
@@ -26,12 +26,8 @@ def news():
 
 
 @app.route('/tree')
-def tree(mode=-1):
-    arg = request.args
-    mode = int(arg.get('mode')) if 'mode' in arg else mode
-    if mode == -1:
-        mode = np.random.randint(0, 6)
-    task = SimplifyTask(var=mode)
+def tree():
+    task = SimplifyTask()
     task.generate()
     tex_html = task.to_html()
     mfp = task.get().get_task()
@@ -45,54 +41,8 @@ def get_menu():
     return render_template('menu.html')
 
 
-@app.route('/menu_new')
-def get_menu_new():
-    return render_template('menu_new.html')
-
-
 @app.route('/generate_taskset', methods=['GET'])
-def route_generate_taskset(num=1, type=0, xmin=-5, xmax=5, rnd=42):
-    arg = request.args
-    num = int(arg.get('num')) if 'num' in arg else num
-    type = int(arg.get('type')) if 'type' in arg else type
-    #todo remove
-    if type > 42:
-        type = 42
-    xmin = int(arg.get('xmin')) if 'xmin' in arg else xmin
-    xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
-    rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
-    text = arg.get('text')
-    roots = 'roots' in arg
-    floats = 'floats' in arg
-    check_complex = 'check_complex' in arg
-    count = 2 if 'second_var' in arg else 1
-    show_answers = 'show_answers' in arg
-    if xmin >= xmax:
-        return render_template('menu.html', num=num, type=type,
-                               xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
-                               check_complex=check_complex, second_var='second_var' in arg,
-                               show_answers=show_answers, text=text)
-    np.random.seed(rnd)
-    var = [type] * num if type != 42 else np.arange(num) % 42 #todo remove
-    tasks = [SimplifyTask(var=var[i]) for i in range(num)]
-    taskset = TaskSet(tasks, seed=rnd)
-    taskset.generate(params={
-            'xmin': xmin,
-            'xmax': xmax,
-            'roots': roots,
-            'floats': floats,
-            'vars': count,
-            'text': text
-        })
-    tex_html = taskset.to_html(0, check_complex, show_answers)
-    return render_template('generated.html', data=tex_html, num=num, type=type,
-                           xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
-                           check_complex=check_complex, second_var='second_var' in arg,
-                           show_answers=show_answers, text=text)
-
-
-@app.route('/generate_taskset_new', methods=['GET'])
-def route_generate_taskset_new(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd=42):
+def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd=42):
     arg = request.args
     num = int(arg.get('num')) if 'num' in arg else num
     min_comp = int(arg.get('min_comp')) if 'min_comp' in arg else min_comp
@@ -106,12 +56,12 @@ def route_generate_taskset_new(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5,
     count = 2 if 'second_var' in arg else 1
     show_answers = 'show_answers' in arg
     if xmin >= xmax:
-        return render_template('menu_new.html', num=num, min_comp=min_comp, max_comp=max_comp,
+        return render_template('menu.html', num=num, min_comp=min_comp, max_comp=max_comp,
                                xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
                                second_var='second_var' in arg,
                                show_answers=show_answers, text=text)
     np.random.seed(rnd)
-    tasks = [SimplifyTaskNew() for i in range(num)]
+    tasks = [SimplifyTask() for i in range(num)]
     taskset = TaskSet(tasks, seed=rnd)
     taskset.generate(params={
             'xmin': xmin,
@@ -124,7 +74,7 @@ def route_generate_taskset_new(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5,
             'max_comp': max_comp
         })
     tex_html = taskset.to_html(0, show_answers=show_answers)
-    return render_template('generated_new.html', data=tex_html, num=num,
+    return render_template('generated.html', data=tex_html, num=num,
                            min_comp=min_comp, max_comp=max_comp,
                            xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats, second_var='second_var' in arg,
                            show_answers=show_answers, text=text)
