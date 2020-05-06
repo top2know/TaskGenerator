@@ -29,6 +29,7 @@ class AbstractTask:
         :return:
         """
         self.task = Task(params['condition'], params['task'], params['answer'])
+        return self.task
 
 
 class Task:

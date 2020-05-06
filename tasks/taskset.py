@@ -1,4 +1,4 @@
-from printer.printing import print_tex_on_html
+from printer.printing import print_tex_on_html, print_tex
 
 
 class TaskSet:
@@ -35,7 +35,7 @@ class TaskSet:
         :param params: dict of params
         :return:
         """
-        self.taskset = [[task.get(params) for task in self.tasks] for _ in range(num)]
+        self.taskset = [[task.generate(params) for task in self.tasks] for _ in range(num)]
 
     def to_html(self, num=0, show_answers=False):
         """
@@ -45,4 +45,15 @@ class TaskSet:
         :return: HTML representation
         """
         return print_tex_on_html(self.taskset[num], show_answers)
+
+    def to_tex(self, multiple_files=True):
+        files = []
+        if multiple_files:
+            for i in range(len(self.taskset)):
+                files.append(print_tex(self.taskset[i], i))
+        else:
+            # todo
+            pass
+        return files
+
 

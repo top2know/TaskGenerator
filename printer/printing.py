@@ -169,3 +169,24 @@ def print_tex_on_html(taskset, show_answers=False):
     </script>"""
     return s
 
+
+def print_tex(taskset, num):
+    """
+    Prints expressions on LaTeX page
+    :param taskset: list of Tasks
+    :return: HTML code
+    """
+    texts = [task.get_condition() for task in taskset]
+    tasks = [task.get_task() for task in taskset]
+    content = r"""\documentclass{0}
+    \begin{1}
+    \begin{2} Variant {3} \end{2} 
+    \begin{4}
+    {5}
+    \end{4}
+    \end{1}
+    """.format('{article}', '{document}', '{center}', num, '{enumerate}',
+               '\n'.join(['\\item ' + texts[i] + ' ' +
+                          print_my_latex(make_fractions_pretty(tasks[i])) for i in range(len(tasks))]))
+    return content
+

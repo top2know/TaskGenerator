@@ -64,6 +64,7 @@ class SimplifyTask(AbstractTask):
                                              )
         print(simplify(expr) == answer)
         self.task = Task(' '.join([text, str(comp)]), expr, answer)
+        return self.task
 
     def to_html(self):
         """
@@ -71,3 +72,10 @@ class SimplifyTask(AbstractTask):
         :return: HTML representation
         """
         return print_tex_on_html([self.task])
+
+    def to_tex(self):
+        """
+        Turns task to LaTeX
+        :return: LaTeX representation
+        """
+        return print_tex_on_html()
