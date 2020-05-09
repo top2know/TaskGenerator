@@ -1,3 +1,6 @@
+from printer.printing import print_tex_on_html
+
+
 class AbstractTask:
     """Abstract task with generation ability"""
     def __init__(self, name='Task'):
@@ -30,6 +33,13 @@ class AbstractTask:
         """
         self.task = Task(params['condition'], params['task'], params['answer'])
         return self.task
+
+    def to_html(self):
+        """
+        Turns task to HTML
+        :return: HTML representation
+        """
+        return print_tex_on_html([self.task])
 
 
 class Task:

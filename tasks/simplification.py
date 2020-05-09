@@ -2,7 +2,6 @@ from sympy import simplify
 
 from generator.SimplifyGenerator import SimplifyGenerator
 from generator.extenders import create_var
-from printer.printing import print_tex_on_html
 from tasks.task import AbstractTask, Task
 import numpy as np
 
@@ -15,7 +14,7 @@ def extract_val(arr, key, default=None):
     :param default: default value if key is missing
     :return: value of key or default
     """
-    return arr[key] if key in arr and arr[key] else default
+    return arr[key] if arr and key in arr and arr[key] else default
 
 
 class SimplifyTask(AbstractTask):
@@ -66,16 +65,3 @@ class SimplifyTask(AbstractTask):
         self.task = Task(' '.join([text, str(comp)]), expr, answer)
         return self.task
 
-    def to_html(self):
-        """
-        Turns task to HTML
-        :return: HTML representation
-        """
-        return print_tex_on_html([self.task])
-
-    def to_tex(self):
-        """
-        Turns task to LaTeX
-        :return: LaTeX representation
-        """
-        return print_tex_on_html()

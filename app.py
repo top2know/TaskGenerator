@@ -7,6 +7,9 @@ import shutil
 from flask import *
 from generator.tree import *
 from printer.printing import *
+from tasks.equation import EquationTask
+from tasks.factory import TaskFactory
+from tasks.simple_task import SimpleTask
 from tasks.simplification import SimplifyTask
 from tasks.taskset import TaskSet
 
@@ -16,6 +19,11 @@ app = Flask(__name__)
 @app.route('/')
 def hello_world():
     return render_template('index.html', user='Alex')
+
+
+@app.route('/taskset')
+def taskset():
+    return render_template('taskset_menu.html')
 
 
 @app.route('/about')
@@ -110,60 +118,17 @@ def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd
                            show_answers=show_answers, text=text)
 
 
-@app.route('/get_pdf')
-def get_pdf():
-    content = r"""
-\documentclass{}
-\begin{}
-Text
-\end{}
-""".format('{article}', '{document}', '{document}')
-    #pdf = latex2pdf(content)
-    with tempfile.TemporaryDirectory() as tempdir:
-        tempdir = '/app'
-        for i in range(2):
-            process = Popen(
-                ['pdflatex', '-output-directory', tempdir],
-                stdin=PIPE,
-                stdout=PIPE,
-            )
-            process.communicate(content.encode('utf-8'))
-        with open(os.path.join(tempdir, 'texput.pdf'), 'rb') as f:
-            pdf = f.read()
-        # print(os.path.join(tempdir, 'file.tex'))
-        # with open(os.path.join(tempdir, 'file.tex'), "w") as tmpfile:
-        #   tmpfile.write(content)
-        # pdfl = PDFLaTeX.from_texfile(os.path.join(tempdir, 'file.tex'))
-    # pdf, log, completed_process = pdfl.create_pdf(keep_pdf_file=False, keep_log_file=False)
-    response = make_response(pdf)
-    # response.headers.set('Content-Disposition', 'attachment', filename=name + '.pdf')
-    response.headers.set('Content-Type', 'application/pdf')
-    return response
-
-
-@app.route('/get_pdf_2')
-def get_pdf2():
-    # Define your data
-    sourceHtml = tree()
-    outputFilename = "test.pdf"
-    resultFile = open(outputFilename, "w+b")
-    with open('file.html', "w") as tmpfile:
-        tmpfile.write(sourceHtml)
-    #a = webbrowser.open('file.html')
-    #pisaStatus = pisa.CreatePDF(
-    #    sourceHtml,
-    #    dest=resultFile,
-    #    encoding='UTF-8')
-
-
-    resultFile.close()
-    with open('test.pdf', 'rb') as f:
-        pdf = f.read()
-    #with open(os.path.join('/app', 'out.pdf'), 'rb') as f:
-    #    pdf = f.read()
-    response = make_response(pdf)
-    # response.headers.set('Content-Disposition', 'attachment', filename=name + '.pdf')
-    response.headers.set('Content-Type', 'application/pdf')
+@app.route('/generate_demo_taskset', methods=['GET'])
+def get_example_taskset():
+    factory = TaskFactory()
+    arg = request.args
+    tasks = [factory.get(arg.get('task_{}'.format(i))) for i in range(1, len(arg))]
+    taskset = TaskSet(tasks)
+    taskset.generate(num=int(arg.get('num')) if 'num' in arg else 3)
+    zip_file = taskset_to_zip(taskset)
+    response = make_response(zip_file)
+    response.headers.set('Content-Type', 'zip')
+    response.headers.set('Content-Disposition', 'attachment', filename='archive.zip')
     return response
 
 

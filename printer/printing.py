@@ -187,6 +187,6 @@ def print_tex(taskset, num):
     \end{1}
     """.format('{article}', '{document}', '{center}', num, '{enumerate}',
                '\n'.join(['\\item ' + texts[i] + ' ' +
-                          print_my_latex(make_fractions_pretty(tasks[i])) for i in range(len(tasks))]))
+                          (print_my_latex(make_fractions_pretty(tasks[i])) if tasks[i] != '' else '') for i in range(len(tasks))]))
     return content
 
