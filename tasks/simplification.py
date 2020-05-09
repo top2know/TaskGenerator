@@ -61,7 +61,6 @@ class SimplifyTask(AbstractTask):
                                              # floats=floats,
                                              other_letters=other_letters
                                              )
-        print(simplify(expr) == answer)
         self.task = Task(' '.join([text, str(comp)]), expr, answer)
         return self.task
 

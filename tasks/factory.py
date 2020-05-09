@@ -7,7 +7,6 @@ from tasks.task import AbstractTask
 class TaskFactory:
 
     def get(self, name):
-        print(name)
         if name == 'simplify':
             return SimplifyTask()
         if name == 'simple':

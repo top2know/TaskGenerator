@@ -7,13 +7,29 @@ import shutil
 from flask import *
 from generator.tree import *
 from printer.printing import *
-from tasks.equation import EquationTask
 from tasks.factory import TaskFactory
-from tasks.simple_task import SimpleTask
 from tasks.simplification import SimplifyTask
 from tasks.taskset import TaskSet
 
+import logging.handlers
+import configparser
+
+config = configparser.ConfigParser()
+config.read("config")
+
 app = Flask(__name__)
+
+smtp_handler = logging.handlers.SMTPHandler(mailhost=(config['SMTP']['address'], int(config['SMTP']['port'])),
+                                            secure=(),
+                                            fromaddr=config['SMTP']['username'],
+                                            toaddrs=config['SMTP']['username'],
+                                            subject=u"[{}] TaskGenerator error!".format(config['ENV']['env']),
+                                            credentials=(config['SMTP']['username'], config['SMTP']['password']))
+
+smtp_handler.setLevel(logging.ERROR)
+
+logger = logging.getLogger()
+logger.addHandler(smtp_handler)
 
 
 @app.route('/')

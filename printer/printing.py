@@ -69,8 +69,6 @@ def make_fractions_pretty(expr, check=True):
     """
     # TODO: works badly
     if type(expr) is not mul.Mul:
-        if check:
-            print('simple', type(expr), expr)
         return expr
     d = {}
     try:
@@ -179,13 +177,16 @@ def print_tex(taskset, num):
     texts = [task.get_condition() for task in taskset]
     tasks = [task.get_task() for task in taskset]
     content = r"""\documentclass{0}
-    \begin{1}
-    \begin{2} Variant {3} \end{2} 
-    \begin{4}
-    {5}
-    \end{4}
-    \end{1}
-    """.format('{article}', '{document}', '{center}', num, '{enumerate}',
+    \usepackage[utf8]{6}
+    \usepackage[T2A,T1]{7}
+    \usepackage[english,russian]{1}
+    \begin{2}
+    \begin{3} Вариант {4} \end{3} 
+    \begin{5}
+    {8}
+    \end{5}
+    \end{2}
+    """.format('{article}', '{babel}', '{document}', '{center}', num, '{enumerate}', '{inputenc}', '{fontenc}',
                '\n'.join(['\\item ' + texts[i] + ' ' +
                           (print_my_latex(make_fractions_pretty(tasks[i])) if tasks[i] != '' else '') for i in range(len(tasks))]))
     return content

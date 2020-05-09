@@ -1,0 +1,7 @@
+[SMTP]
+address=smtp.gmail.com
+port=587
+username=user@gmail.com
+password=password
+[ENV]
+env=development
