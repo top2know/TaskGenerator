@@ -1,7 +1,10 @@
+from sympy import nsimplify
 from sympy.core import *
 from sympy.printing.latex import LatexPrinter
 from sympy.core.function import _coeff_isneg
 import numpy as np
+
+from generator.tree import create_tree, SYM, UNK
 
 
 class MyLatexPrinter(LatexPrinter):
@@ -96,38 +99,29 @@ def remove_float_one(expr):
     :param expr: expression
     :return: transformed expression
     """
-    if type(expr) == mul.Mul:
-        return expr.as_coeff_mul()[0] * np.prod(
-            [remove_float_one(val) if val != S(1.0) else 1 for val in expr.as_coeff_mul()[1]])
-    if type(expr) == add.Add:
-        return expr.as_coeff_add()[0] + np.sum([remove_float_one(val) for val in expr.as_coeff_add()[1]])
-    return expr
+    return remove_floats(create_tree(expr)).get_expr()
 
 
-s = """"""
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except TypeError:
+        return False
 
 
-def str_tree(tree, level=0):
-    """
-    Tree printer
-    :param tree: tree
-    :param level: node level
-    :return: string representation of tree
-    """
-    global s
-    if level == 0:
-        s = """"""
-    for k in tree:
-        s += ('----' * level + ' ' + k)
-        if type(tree[k]) is list:
-            s += '\r\n<br>'
-            for memb in tree[k]:
-                str_tree(memb, level=level + 1)
-        else:
-            s += (': ' + str(tree[k]))
-            s += """\r\n<br>"""
-    if level == 0:
-        return s
+def remove_floats(tree):
+    if tree.operation in (SYM, UNK):
+        if is_number(tree.children[0]) :
+            if tree.children[0] == int(tree.children[0]):
+                tree.children[0] = int(tree.children[0])
+            elif len(str(tree.children[0]).rstrip('0')) > 5:
+                print(nsimplify(tree.children[0]))
+                tree.children[0] = nsimplify(tree.children[0])
+    else:
+        for i in range(len(tree.children)):
+            remove_floats(tree.children[i])
+    return tree
 
 
 def make_pretty(expr, check=False):
@@ -163,10 +157,10 @@ def print_tex_on_html(taskset, show_answers=False):
     for i, res in enumerate(tasks):
         if show_answers:
             s += """katex.render(\"{}\", document.getElementById(\"{}\"));
-""".format(print_my_latex_html(make_pretty(res, check=False), answers[i]).replace('\\', '\\\\'), i)
+""".format(print_my_latex_html(res, answers[i]).replace('\\', '\\\\'), i)
         else:
             s += """katex.render(\"{}\", document.getElementById(\"{}\"));
-""".format(print_my_latex_html(make_pretty(res, check=False)).replace('\\', '\\\\'), i)
+""".format(print_my_latex_html(res).replace('\\', '\\\\'), i)
     s += """}}
     </script>"""
     return s
@@ -192,7 +186,7 @@ def print_tex(taskset, num):
     \end{2}
     """.format('{article}', '{babel}', '{document}', '{center}', num, '{enumerate}', '{inputenc}', '{fontenc}',
                '\n'.join(['\\item ' + texts[i] + ' ' +
-                          (print_my_latex(make_fractions_pretty(tasks[i])) if tasks[i] != '' else '') for i in
+                          (print_my_latex(tasks[i]) if tasks[i] != '' else '') for i in
                           range(len(tasks))]))
     return content
 
@@ -213,11 +207,10 @@ def print_tex_answers(taskset):
         \end{4}
         """.format('{article}', '{inputenc}', '{fontenc}', '{babel}', '{document}',
                    '\n'.join([r"""\begin{0} Вариант {1} \end {0}
-\begin
-{2}
+\begin{2}
 {3}
-\end
-{2}""".format('{center}', i, '{enumerate}',
+\end{2}
+\clearpage""".format('{center}', i, '{enumerate}',
               '\n'.join(['\\item ' + (answers[i][j] if (type(answers[i][j]) is str)
                                       else print_my_latex(answers[i][j]))
                          for j in range(len(answers[i]))]))
@@ -243,13 +236,12 @@ def print_tex_tasks(taskset):
         \end{4}
         """.format('{article}', '{inputenc}', '{fontenc}', '{babel}', '{document}',
                    '\n'.join([r"""\begin{0} Вариант {1} \end {0}
-\begin
-{2}
+\begin{2}
 {3}
-\end
-{2}""".format('{center}', i, '{enumerate}',
+\end{2}
+\clearpage""".format('{center}', i, '{enumerate}',
               '\n'.join(['\\item ' + texts[i][j] + ' ' +
-                         (print_my_latex(make_fractions_pretty(tasks[i][j])) if tasks[i][j] != '' else '')
+                         (print_my_latex(tasks[i][j]) if tasks[i][j] != '' else '')
                          for j in range(len(tasks[i]))]))
                               for i in range(len(taskset))]))
 

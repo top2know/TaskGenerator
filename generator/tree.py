@@ -1,8 +1,6 @@
 from sympy import *
 import numpy as np
 
-from printer.printing import str_tree
-
 MUL = 'mul'
 ADD = 'add'
 POW = 'pow'
@@ -26,6 +24,31 @@ complexities = {
     SYM: 1,
     UNK: 1
 }
+
+s = """"""
+
+
+def str_tree(tree, level=0):
+    """
+    Tree printer
+    :param tree: tree
+    :param level: node level
+    :return: string representation of tree
+    """
+    global s
+    if level == 0:
+        s = """"""
+    for k in tree:
+        s += ('----' * level + ' ' + k)
+        if type(tree[k]) is list:
+            s += '\r\n<br>'
+            for memb in tree[k]:
+                str_tree(memb, level=level + 1)
+        else:
+            s += (': ' + str(tree[k]))
+            s += """\r\n<br>"""
+    if level == 0:
+        return s
 
 
 class Tree:

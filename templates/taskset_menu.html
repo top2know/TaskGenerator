@@ -14,6 +14,8 @@
     <input name="num_tasks" id="num_tasks" value="9" size="4" onchange="change_tasks_num()" required pattern="[1-9]{1}"><br>
     <strong>Введите номер варианта </strong>
     <input name="rnd" id="rnd" value="42" size="4" required pattern="[0-9]{1,5}"><br>
+    <input type="button" onclick="remove_task()" value="Удалить задание">
+    <input type="button" onclick="add_task()" value="Добавить задание"><br>
     <p id="task1"><strong>Задание 1</strong>
         <select name="task_1">
             <option value="simplify" selected>Упрощение</option>
@@ -129,22 +131,35 @@
     <button>Сгенерировать задания</button><br>
 </form>
 <script>
+    function add_task() {
+        let elem = document.getElementById('num_tasks').value;
+        if (elem !== '9')
+            document.getElementById('num_tasks').value = parseInt(elem) + 1;
+        change_tasks_num();
+    }
+    function remove_task() {
+        let elem = document.getElementById('num_tasks').value;
+        if (elem !== '1')
+            document.getElementById('num_tasks').value = parseInt(elem) - 1;
+        change_tasks_num();
+    }
     function change_tasks_num() {
-        var elem = document.getElementById('num_tasks').value;
+        let i, element;
+        let elem = document.getElementById('num_tasks').value;
         if (elem < '1') {
             document.getElementById('num_tasks').value = '1'
             elem = '1';
         }
-        else if (elem > '9') {
+        else if (elem > '9' || elem.length > 1) {
             document.getElementById('num_tasks').value = '9'
             elem = '9';
         }
-        for (var i = 1; i <= (parseInt(elem) <= 9 ? parseInt(elem) : 9); ++i) {
-            var element = document.getElementById('task' + i);
+        for (i = 1; i <= (parseInt(elem) <= 9 ? parseInt(elem) : 9); ++i) {
+            element = document.getElementById('task' + i);
             element.style.display = 'block';
         }
-        for (var i = parseInt(elem) + 1; i <= 9; ++i) {
-            var element = document.getElementById('task' + i);
+        for (i = parseInt(elem) + 1; i <= 9; ++i) {
+            element = document.getElementById('task' + i);
             element.style.display = 'none';
         }
     }

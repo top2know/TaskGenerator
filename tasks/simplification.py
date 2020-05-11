@@ -61,7 +61,7 @@ class SimplifyTask(AbstractTask):
                                              xmax=xmax,
                                              # todo add roots and floats to generator
                                              # roots=roots,
-                                             # floats=floats,
+                                             floats=floats,
                                              other_letters=other_letters
                                              )
         self.task = Task(' '.join([text, str(comp)]), expr, answer)
