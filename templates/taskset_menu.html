@@ -8,34 +8,147 @@
 </head>
 <body>
 {% extends 'base.html' %}
-
 {% block content %}
 <form id="settings" action="/generate_demo_taskset" method="get">
-    <p><strong>Задание 1</strong>
+    <strong>Введите количество заданий (от 1 до 9)</strong>
+    <input name="num_tasks" id="num_tasks" value="9" size="4" onchange="change_tasks_num()" required pattern="[1-9]{1}"><br>
+    <strong>Введите номер варианта </strong>
+    <input name="rnd" id="rnd" value="42" size="4" required pattern="[0-9]{1,5}"><br>
+    <p id="task1"><strong>Задание 1</strong>
         <select name="task_1">
             <option value="simplify" selected>Упрощение</option>
             <option value="simple">Простое</option>
             <option value="equation">Уравнение</option>
        </select>
+        <select name="task_1_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
     </p>
-    <p><strong>Задание 2</strong>
+    <p id="task2"><strong>Задание 2</strong>
         <select name="task_2">
             <option value="simplify" selected>Упрощение</option>
             <option value="simple">Простое</option>
             <option value="equation">Уравнение</option>
        </select>
+        <select name="task_2_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
     </p>
-    <p><strong>Задание 3</strong>
+    <p id="task3"><strong>Задание 3</strong>
         <select name="task_3">
             <option value="simplify" selected>Упрощение</option>
             <option value="simple">Простое</option>
             <option value="equation">Уравнение</option>
        </select>
+        <select name="task_3_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
     </p>
-    <strong>Введите количество вариантов</strong>
+    <p id="task4"><strong>Задание 4</strong>
+        <select name="task_4">
+            <option value="simplify" selected>Упрощение</option>
+            <option value="simple">Простое</option>
+            <option value="equation">Уравнение</option>
+       </select>
+        <select name="task_4_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
+    </p>
+    <p id="task5"><strong>Задание 5</strong>
+        <select name="task_5">
+            <option value="simplify" selected>Упрощение</option>
+            <option value="simple">Простое</option>
+            <option value="equation">Уравнение</option>
+       </select>
+        <select name="task_5_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
+    </p>
+    <p id="task6"><strong>Задание 6</strong>
+        <select name="task_6">
+            <option value="simplify" selected>Упрощение</option>
+            <option value="simple">Простое</option>
+            <option value="equation">Уравнение</option>
+       </select>
+        <select name="task_6_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
+    </p>
+    <p id="task7"><strong>Задание 7</strong>
+        <select name="task_7">
+            <option value="simplify" selected>Упрощение</option>
+            <option value="simple">Простое</option>
+            <option value="equation">Уравнение</option>
+       </select>
+        <select name="task_7_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
+    </p>
+    <p id="task8"><strong>Задание 8</strong>
+        <select name="task_8">
+            <option value="simplify" selected>Упрощение</option>
+            <option value="simple">Простое</option>
+            <option value="equation">Уравнение</option>
+       </select>
+        <select name="task_8_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
+    </p>
+    <p id="task9"><strong>Задание 9</strong>
+        <select name="task_9">
+            <option value="simplify" selected>Упрощение</option>
+            <option value="simple">Простое</option>
+            <option value="equation">Уравнение</option>
+       </select>
+        <select name="task_9_comp">
+            <option value="easy" selected>Простой</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+       </select>
+    </p>
+    <strong>Введите количество вариантов (от 1 до 99)</strong>
     <input name="num" id="num" value="3" size="4" required pattern="[1-9]{1}[0-9]{0,1}"><br>
+    <strong>Отдельный файл для каждого варианта</strong>
+    <input type="checkbox" name="multiple" id="multiple" checked><br>
     <button>Сгенерировать задания</button><br>
 </form>
+<script>
+    function change_tasks_num() {
+        var elem = document.getElementById('num_tasks').value;
+        if (elem < '1') {
+            document.getElementById('num_tasks').value = '1'
+            elem = '1';
+        }
+        else if (elem > '9') {
+            document.getElementById('num_tasks').value = '9'
+            elem = '9';
+        }
+        for (var i = 1; i <= (parseInt(elem) <= 9 ? parseInt(elem) : 9); ++i) {
+            var element = document.getElementById('task' + i);
+            element.style.display = 'block';
+        }
+        for (var i = parseInt(elem) + 1; i <= 9; ++i) {
+            var element = document.getElementById('task' + i);
+            element.style.display = 'none';
+        }
+    }
+</script>
 <br>
 {% block tasks %}{% endblock tasks %}
 {% endblock content %}

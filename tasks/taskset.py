@@ -1,4 +1,4 @@
-from printer.printing import print_tex_on_html, print_tex
+from printer.printing import print_tex_on_html, print_tex, print_tex_answers, print_tex_tasks
 
 
 class TaskSet:
@@ -53,7 +53,8 @@ class TaskSet:
                 files.append(print_tex(self.taskset[i], i))
         else:
             # todo
-            pass
-        return files
+            files.append(print_tex_tasks(self.taskset))
+        answers = print_tex_answers(self.taskset)
+        return files, answers
 
 

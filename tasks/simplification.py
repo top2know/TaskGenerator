@@ -20,21 +20,24 @@ def extract_val(arr, key, default=None):
 class SimplifyTask(AbstractTask):
     """Generator of Simplifying tasks"""
 
-    def __init__(self, task='Simplify'):
+    def __init__(self, task='Simplify', params={}):
         """
         Constructor
         :param task: Name of task
-        :param var: number of simplification type
+        :param params: parameters for task
         """
         super().__init__(task)
         self.generator = SimplifyGenerator()
+        self.params = params
 
-    def generate(self, params={}):
+    def generate(self, params=None):
         """
         Generates the task
         :param params: dict of params
         :return:
         """
+        if not params:
+            params = self.params
         xmin = extract_val(params, 'xmin', -5)
         xmax = extract_val(params, 'xmax', 5)
         roots = extract_val(params, 'roots', False)

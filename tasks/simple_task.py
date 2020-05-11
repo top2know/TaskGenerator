@@ -10,12 +10,14 @@ data = [
 
 class SimpleTask(AbstractTask):
     """Example of class with predefined list of questions and answers"""
-    def __init__(self, task='Simple'):
+    def __init__(self, task='Simple', params={}):
         """
         Constructor
         :param task: Name of task
+        :param params: params for task
         """
         super().__init__(task)
+        self.params = params
 
     def generate(self, params={}):
         rnd = np.random.randint(0, len(data))

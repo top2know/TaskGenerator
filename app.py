@@ -3,7 +3,6 @@ import tempfile
 from subprocess import Popen, PIPE
 import shutil
 
-
 from flask import *
 from generator.tree import *
 from printer.printing import *
@@ -19,12 +18,14 @@ config.read("config")
 
 app = Flask(__name__)
 
-smtp_handler = logging.handlers.SMTPHandler(mailhost=(config['SMTP']['address'], int(config['SMTP']['port'])),
-                                            secure=(),
-                                            fromaddr=config['SMTP']['username'],
-                                            toaddrs=config['SMTP']['username'],
-                                            subject=u"[{}] TaskGenerator error!".format(config['ENV']['env']),
-                                            credentials=(config['SMTP']['username'], config['SMTP']['password']))
+# noinspection PyTypeChecker
+smtp_handler = logging. \
+    handlers.SMTPHandler(mailhost=(config['SMTP']['address'], int(config['SMTP']['port'])),
+                         secure=(),
+                         fromaddr=config['SMTP']['username'],
+                         toaddrs=config['SMTP']['username'],
+                         subject=u"[{}] TaskGenerator error!".format(config['ENV']['env']),
+                         credentials=(config['SMTP']['username'], config['SMTP']['password']))
 
 smtp_handler.setLevel(logging.ERROR)
 
@@ -68,18 +69,28 @@ def get_menu():
     return render_template('menu.html')
 
 
-def taskset_to_zip(taskset):
+def pdflatex_magic(tempdir, tempdir2, file, filename):
+    for _ in range(5):
+        for _ in range(2):
+            process = Popen(
+                ['pdflatex', '-output-directory', tempdir],
+                stdin=PIPE,
+                stdout=PIPE,
+            )
+            process.communicate(file.encode('utf-8'))
+        try:
+            shutil.copyfile(os.path.join(tempdir, 'texput.pdf'), os.path.join(tempdir2, filename))
+            break
+        except:
+            continue
+
+
+def taskset_to_zip(taskset, multiple_files=True):
     with tempfile.TemporaryDirectory() as tempdir, tempfile.TemporaryDirectory() as tempdir2:
-        files = taskset.to_tex()
+        files, answers = taskset.to_tex(multiple_files=multiple_files)
         for i, file in enumerate(files):
-            for _ in range(2):
-                process = Popen(
-                    ['pdflatex', '-output-directory', tempdir],
-                    stdin=PIPE,
-                    stdout=PIPE,
-                )
-                process.communicate(file.encode('utf-8'))
-            shutil.copyfile(os.path.join(tempdir, 'texput.pdf'), os.path.join(tempdir2, 'variant{}.pdf'.format(i)))
+            pdflatex_magic(tempdir, tempdir2, file, 'variant{}.pdf'.format(i))
+        pdflatex_magic(tempdir, tempdir2, answers, 'answers.pdf')
         shutil.make_archive(os.path.join(tempdir, 'archive'), 'zip', tempdir2)
         with open(os.path.join(tempdir, 'archive.zip'), 'rb') as f:
             zip_file = f.read()
@@ -109,7 +120,7 @@ def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd
     np.random.seed(rnd)
     tasks = [SimplifyTask() for i in range(num)]
     taskset = TaskSet(tasks, seed=rnd)
-    taskset.generate(num=3, params={
+    taskset.generate(num=(3 if as_zip else 1), params={
         'xmin': xmin,
         'xmax': xmax,
         'roots': roots,
@@ -130,18 +141,22 @@ def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd
     tex_html = taskset.to_html(0, show_answers=show_answers)
     return render_template('generated.html', data=tex_html, num=num,
                            min_comp=min_comp, max_comp=max_comp,
-                           xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats, second_var='second_var' in arg,
+                           xmin=xmin, xmax=xmax, rnd=rnd,
+                           roots=roots, floats=floats, second_var='second_var' in arg,
                            show_answers=show_answers, text=text)
 
 
 @app.route('/generate_demo_taskset', methods=['GET'])
-def get_example_taskset():
+def get_example_taskset(rnd=42):
     factory = TaskFactory()
     arg = request.args
-    tasks = [factory.get(arg.get('task_{}'.format(i))) for i in range(1, len(arg))]
+    rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
+    np.random.seed(rnd)
+    tasks = [factory.get(arg.get('task_{}'.format(i)), arg.get('task_{}_comp'.format(i)))
+             for i in range(1, int(arg.get('num_tasks')) + 1)]
     taskset = TaskSet(tasks)
     taskset.generate(num=int(arg.get('num')) if 'num' in arg else 3)
-    zip_file = taskset_to_zip(taskset)
+    zip_file = taskset_to_zip(taskset, 'multiple' in arg)
     response = make_response(zip_file)
     response.headers.set('Content-Type', 'zip')
     response.headers.set('Content-Disposition', 'attachment', filename='archive.zip')

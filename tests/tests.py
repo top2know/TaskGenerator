@@ -1,10 +1,9 @@
 import unittest
 
-from app import app
 from generator.SimplifyGenerator import SimplifyGenerator
 from generator.generators import *
 from printer.printing import *
-from generator.tree import Tree, create_tree
+from generator.tree import create_tree
 
 
 class UnitTest(unittest.TestCase):
@@ -67,6 +66,7 @@ class UnitTest(unittest.TestCase):
             self.assertEqual(ans, gen.simplify())
 
     def test_routes(self):
+        from app import app
         with app.test_client() as client:
             self.assertEqual('200 OK', client.get('/news').status)
             self.assertEqual('200 OK', client.get('/tree').status)
@@ -94,10 +94,6 @@ class UnitTest(unittest.TestCase):
         g = ext.extender_2_distinct(self.x + 1)
         print(g)
         self.assertEqual(self.x + 1, simplify(g))
-        #exp = sympify('sin(x^2)+ln(k*x)+1')
-        #print(generator.generate(exp))
-        #print(create_tree(exp).get_json())
-        #print(create_tree(exp).get_expr())
 
 
 if __name__ == '__main__':

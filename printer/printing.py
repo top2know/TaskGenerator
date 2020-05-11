@@ -78,11 +78,13 @@ def make_fractions_pretty(expr, check=True):
                 d[denom] += num
             else:
                 d[denom] = num
-        res = expr.as_coeff_mul()[0]*np.prod(expr.as_coeff_mul()[1][:-1]) * (expr.as_coeff_mul()[1][-1].as_coeff_add()[0]+np.sum([d[k] / k for k in d]))
-        assert(res.simplify() == expr.simplify())
+        res = expr.as_coeff_mul()[0] * np.prod(expr.as_coeff_mul()[1][:-1]) * (
+                expr.as_coeff_mul()[1][-1].as_coeff_add()[0] + np.sum([d[k] / k for k in d]))
+        assert (res.simplify() == expr.simplify())
         return res
     except AssertionError:
-        print('error while making pretty', res.simplify(), expr.simplify(), expr.as_coeff_mul()[1][-1], np.sum([d[k] / k for k in d]))
+        print('error while making pretty', res.simplify(), expr.simplify(), expr.as_coeff_mul()[1][-1],
+              np.sum([d[k] / k for k in d]))
         return expr
     except:
         return expr
@@ -120,7 +122,7 @@ def str_tree(tree, level=0):
         if type(tree[k]) is list:
             s += '\r\n<br>'
             for memb in tree[k]:
-                str_tree(memb, level=level+1)
+                str_tree(memb, level=level + 1)
         else:
             s += (': ' + str(tree[k]))
             s += """\r\n<br>"""
@@ -151,7 +153,9 @@ def print_tex_on_html(taskset, show_answers=False):
     texts = [task.get_condition() for task in taskset]
     tasks = [task.get_task() for task in taskset]
     answers = [task.get_answer() for task in taskset]
-    s = "\n".join(["{}<div id = \"{}\">The expression was overcomplex</div><br>".format(texts[i] + '\n' if texts[i] else '', i) for i in range(len(tasks))])
+    s = "\n".join(
+        ["{}<div id = \"{}\">The expression was overcomplex</div><br>".format(texts[i] + '\n' if texts[i] else '', i)
+         for i in range(len(tasks))])
     s += """<script>
     window.onload = function()
     {{
@@ -172,7 +176,7 @@ def print_tex(taskset, num):
     """
     Prints expressions on LaTeX page
     :param taskset: list of Tasks
-    :return: HTML code
+    :return: LaTeX code
     """
     texts = [task.get_condition() for task in taskset]
     tasks = [task.get_task() for task in taskset]
@@ -188,6 +192,65 @@ def print_tex(taskset, num):
     \end{2}
     """.format('{article}', '{babel}', '{document}', '{center}', num, '{enumerate}', '{inputenc}', '{fontenc}',
                '\n'.join(['\\item ' + texts[i] + ' ' +
-                          (print_my_latex(make_fractions_pretty(tasks[i])) if tasks[i] != '' else '') for i in range(len(tasks))]))
+                          (print_my_latex(make_fractions_pretty(tasks[i])) if tasks[i] != '' else '') for i in
+                          range(len(tasks))]))
     return content
 
+
+def print_tex_answers(taskset):
+    """
+    Prints answers on LaTeX document
+    :param taskset: list of Tasks
+    :return: LaTeX code
+    """
+    answers = [[task.get_answer() for task in taskset[i]] for i in range(len(taskset))]
+    content = r"""\documentclass{0}
+        \usepackage[utf8]{1}
+        \usepackage[T2A,T1]{2}
+        \usepackage[english,russian]{3}
+        \begin{4}
+        {5}
+        \end{4}
+        """.format('{article}', '{inputenc}', '{fontenc}', '{babel}', '{document}',
+                   '\n'.join([r"""\begin{0} Вариант {1} \end {0}
+\begin
+{2}
+{3}
+\end
+{2}""".format('{center}', i, '{enumerate}',
+              '\n'.join(['\\item ' + (answers[i][j] if (type(answers[i][j]) is str)
+                                      else print_my_latex(answers[i][j]))
+                         for j in range(len(answers[i]))]))
+                              for i in range(len(taskset))]))
+
+    return content
+
+
+def print_tex_tasks(taskset):
+    """
+    Prints tasks on single LaTeX document
+    :param taskset: list of Tasks
+    :return: LaTeX code
+    """
+    texts = [[task.get_condition() for task in taskset[i]] for i in range(len(taskset))]
+    tasks = [[task.get_task() for task in taskset[i]] for i in range(len(taskset))]
+    content = r"""\documentclass{0}
+        \usepackage[utf8]{1}
+        \usepackage[T2A,T1]{2}
+        \usepackage[english,russian]{3}
+        \begin{4}
+        {5}
+        \end{4}
+        """.format('{article}', '{inputenc}', '{fontenc}', '{babel}', '{document}',
+                   '\n'.join([r"""\begin{0} Вариант {1} \end {0}
+\begin
+{2}
+{3}
+\end
+{2}""".format('{center}', i, '{enumerate}',
+              '\n'.join(['\\item ' + texts[i][j] + ' ' +
+                         (print_my_latex(make_fractions_pretty(tasks[i][j])) if tasks[i][j] != '' else '')
+                         for j in range(len(tasks[i]))]))
+                              for i in range(len(taskset))]))
+
+    return content

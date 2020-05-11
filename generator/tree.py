@@ -14,15 +14,37 @@ CTG = 'ctg'
 SYM = 'sym'
 UNK = 'unknown'
 
+complexities = {
+    MUL: 1,
+    ADD: 1,
+    POW: 1,
+    LOG: 3,
+    SIN: 5,
+    COS: 5,
+    TG: 5,
+    CTG: 5,
+    SYM: 1,
+    UNK: 1
+}
+
 
 class Tree:
     """Tree representation of SymPy expression"""
 
     def __init__(self, operation, children=[]):
+        """
+        Constructor of Tree node
+        :param operation: type of operation
+        :param children: children of node
+        """
         self.operation = operation
         self.children = children
 
     def get_expr(self):
+        """
+        Create SymPy expression from tree
+        :return: SymPy expression
+        """
         if self.operation == MUL:
             return np.product([memb.get_expr() for memb in self.children])
         elif self.operation == ADD:
@@ -43,17 +65,25 @@ class Tree:
         raise ValueError('Unknown type {}'.format(self.operation))
 
     def get_complexity(self):
-
+        """
+        Calculate the empiric complexity of tree
+        :return: complexity
+        """
         complexity = 0
 
         if self.operation == SYM:
-            complexity += 1
+            complexity += complexities[self.operation]
         else:
             for memb in self.children:
                 complexity += memb.get_complexity()
+        complexity *= complexities[self.operation]
         return complexity
 
     def get_json(self):
+        """
+        Get JSON representation of Tree
+        :return: JSON
+        """
         if self.operation in (SYM, UNK):
             return {self.operation: str(self.children[0])}
         return {self.operation: [memb.get_json() for memb in self.children]}

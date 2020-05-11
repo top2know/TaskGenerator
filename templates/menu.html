@@ -44,7 +44,7 @@
     <input name="xmax" id="xmax" value="5" size="4" required pattern="[-]{0,1}[0-9]{1,2}"><br>
     {% endif %}
     <strong>Введите номер варианта </strong>
-    {% if xmax %}
+    {% if rnd %}
     <input name="rnd" id="rnd" value={{ rnd }} size="4" required pattern="[0-9]{1,5}"><br>
     {% else %}
     <input name="rnd" id="rnd" value="42" size="4" required pattern="[0-9]{1,5}"><br>
