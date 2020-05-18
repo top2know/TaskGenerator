@@ -112,11 +112,10 @@ def is_number(s):
 
 def remove_floats(tree):
     if tree.operation in (SYM, UNK):
-        if is_number(tree.children[0]) :
+        if is_number(tree.children[0]):
             if tree.children[0] == int(tree.children[0]):
                 tree.children[0] = int(tree.children[0])
             elif len(str(tree.children[0]).rstrip('0')) > 5:
-                print(nsimplify(tree.children[0]))
                 tree.children[0] = nsimplify(tree.children[0])
     else:
         for i in range(len(tree.children)):

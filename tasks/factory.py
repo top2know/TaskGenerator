@@ -2,6 +2,7 @@ from tasks.equation import EquationTask
 from tasks.simple_task import SimpleTask
 from tasks.simplification import SimplifyTask
 from tasks.task import AbstractTask
+from tasks.trigonometry import TrigonometricTask
 
 params_easy = {
     'xmin': -5,
@@ -30,7 +31,7 @@ params_hard = {
     'xmax': 20,
     'roots': False,
     'floats': False,
-    'vars': 1,
+    'vars': 2,
     'text': 'Сложный',
     'min_comp': 26,
     'max_comp': 42
@@ -59,4 +60,12 @@ class TaskFactory:
             if comp == 'hard':
                 return EquationTask(params=params_hard)
             return EquationTask()
+        if name == 'trig':
+            if comp == 'easy':
+                return TrigonometricTask(params=params_easy)
+            if comp == 'medium':
+                return TrigonometricTask(params=params_medium)
+            if comp == 'hard':
+                return TrigonometricTask(params=params_hard)
+            return TrigonometricTask()
         return AbstractTask()

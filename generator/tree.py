@@ -17,10 +17,10 @@ complexities = {
     ADD: 1,
     POW: 1,
     LOG: 3,
-    SIN: 5,
-    COS: 5,
-    TG: 5,
-    CTG: 5,
+    SIN: 3,
+    COS: 3,
+    TG: 3,
+    CTG: 3,
     SYM: 1,
     UNK: 1
 }
@@ -39,7 +39,7 @@ def str_tree(tree, level=0):
     if level == 0:
         s = """"""
     for k in tree:
-        s += ('----' * level + ' ' + k)
+        s += ('&nbsp;' * 4 * level + '- ' + k)
         if type(tree[k]) is list:
             s += '\r\n<br>'
             for memb in tree[k]:

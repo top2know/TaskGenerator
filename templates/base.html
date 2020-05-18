@@ -35,6 +35,16 @@
     }
 </style>
 <br>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>
+      var messages = {{ messages | safe }};
+      for (var i=0; i<messages.length; i++) {
+        alert(messages[i]);
+      }
+    </script>
+  {% endif %}
+{% endwith %}
 {% block content %}{% endblock %}
 </body>
 </html>

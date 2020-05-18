@@ -1,6 +1,7 @@
 import unittest
 
 from generator.SimplifyGenerator import SimplifyGenerator
+from generator.TrigonometryGenerator import TrigonometryGenerator
 from generator.generators import *
 from printer.printing import *
 from generator.tree import create_tree
@@ -94,6 +95,10 @@ class UnitTest(unittest.TestCase):
         g = ext.extender_2_distinct(self.x + 1)
         print(g)
         self.assertEqual(self.x + 1, simplify(g))
+
+    def test_trig_generator(self):
+        generator = TrigonometryGenerator(50, 70)
+        print(generator.generate(sin(self.x)))
 
 
 if __name__ == '__main__':
