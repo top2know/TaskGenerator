@@ -1,4 +1,4 @@
-from generator.extenders import Extender
+from generator.extenders import SimplifyExtender
 from generator.tree import create_tree
 import numpy as np
 from sympy import simplify
@@ -11,7 +11,7 @@ class SimplifyGenerator:
     def __init__(self, min_complexity=20, max_complexity=40):
         self.min_complexity = min_complexity
         self.max_complexity = max_complexity
-        self.extender = Extender()
+        self.extender = SimplifyExtender()
 
     def extend(self, expr, xmin, xmax, other_letters, floats, roots):
         d = [f for f in self.extender.__dir__() if not f.endswith('__')]

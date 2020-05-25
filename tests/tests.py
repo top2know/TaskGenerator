@@ -84,14 +84,12 @@ class UnitTest(unittest.TestCase):
         x = self.x
         expr = (x**3 + 2*x**2)/(x+3)
         tree = create_tree(expr)
-        self.assertEqual(8, tree.get_complexity())
         self.assertEqual(expr, tree.get_expr())
-        print(tree.print())
 
     def test_generator(self):
         generator = SimplifyGenerator(35, 50)
         print(generator.generate(self.x + 1))
-        ext = Extender()
+        ext = SimplifyExtender()
         g = ext.extender_2_distinct(self.x + 1)
         print(g)
         self.assertEqual(self.x + 1, simplify(g))

@@ -41,13 +41,16 @@ class MyLatexPrinter(LatexPrinter):
         return tex
 
 
-def print_my_latex(expr):
+def print_my_latex(expr, centered=False):
     """
     LaTeX print ot pdflatex
+    :param centered: place formula on center
     :param expr: expression
     :return: LaTeX expression
     """
-    return '\[' + MyLatexPrinter().doprint(expr) + '\]'
+    if centered:
+        return '\[' + MyLatexPrinter().doprint(expr) + '\]'
+    return '$ \displaystyle{' + MyLatexPrinter().doprint(expr) + '} $'
 
 
 def print_my_latex_html(expr, answer=None):
@@ -168,6 +171,7 @@ def print_tex_on_html(taskset, show_answers=False):
 def print_tex(taskset, num):
     """
     Prints expressions on LaTeX page
+    :param num: variant number
     :param taskset: list of Tasks
     :return: LaTeX code
     """
@@ -185,7 +189,7 @@ def print_tex(taskset, num):
     \end{2}
     """.format('{article}', '{babel}', '{document}', '{center}', num, '{enumerate}', '{inputenc}', '{fontenc}',
                '\n'.join(['\\item ' + texts[i] + ' ' +
-                          (print_my_latex(tasks[i]) if tasks[i] != '' else '') for i in
+                          (print_my_latex(tasks[i], centered=True) if tasks[i] != '' else '') for i in
                           range(len(tasks))]))
     return content
 
@@ -209,10 +213,10 @@ def print_tex_answers(taskset):
 \begin{2}
 {3}
 \end{2}
-\clearpage""".format('{center}', i, '{enumerate}',
-              '\n'.join(['\\item ' + (answers[i][j] if (type(answers[i][j]) is str)
-                                      else print_my_latex(answers[i][j]))
-                         for j in range(len(answers[i]))]))
+\clearpage""".format('{center}', i+1, '{enumerate}',
+                     '\n'.join(['\\item ' + (answers[i][j] if (type(answers[i][j]) is str)
+                                             else print_my_latex(answers[i][j]))
+                                for j in range(len(answers[i]))]))
                               for i in range(len(taskset))]))
 
     return content
@@ -238,10 +242,10 @@ def print_tex_tasks(taskset):
 \begin{2}
 {3}
 \end{2}
-\clearpage""".format('{center}', i, '{enumerate}',
-              '\n'.join(['\\item ' + texts[i][j] + ' ' +
-                         (print_my_latex(tasks[i][j]) if tasks[i][j] != '' else '')
-                         for j in range(len(tasks[i]))]))
+\clearpage""".format('{center}', i+1, '{enumerate}',
+                     '\n'.join(['\\item ' + texts[i][j] + ' ' +
+                                (print_my_latex(tasks[i][j], centered=True) if tasks[i][j] != '' else '')
+                                for j in range(len(tasks[i]))]))
                               for i in range(len(taskset))]))
 
     return content

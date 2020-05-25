@@ -154,7 +154,7 @@ def extender_6(expr, n_min=-20, n_max=20, floats=False, roots=False, other_lette
     return res
 
 
-class Extender:
+class SimplifyExtender:
 
     def extender_1(self, expr, n_min=-20, n_max=20, floats=False, roots=False, other_letters=False):
         return extender_1(expr, n_min, n_max, floats, roots, other_letters)

@@ -31,7 +31,7 @@ params_hard = {
     'xmax': 20,
     'roots': False,
     'floats': False,
-    'vars': 2,
+    'vars': 1,
     'text': 'Сложный',
     'min_comp': 26,
     'max_comp': 42

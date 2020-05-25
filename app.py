@@ -4,7 +4,6 @@ from subprocess import Popen, PIPE
 import shutil
 
 from flask import *
-from generator.tree import *
 from printer.printing import *
 from tasks.factory import TaskFactory
 from tasks.simplification import SimplifyTask
@@ -40,7 +39,7 @@ def hello_world():
 
 @app.route('/taskset')
 def taskset():
-    return render_template('taskset_menu.html')
+    return render_template('taskset_menu.html', nums=list(range(1, 10)))
 
 
 @app.route('/about')
@@ -89,7 +88,7 @@ def taskset_to_zip(taskset, multiple_files=True):
     with tempfile.TemporaryDirectory() as tempdir, tempfile.TemporaryDirectory() as tempdir2:
         files, answers = taskset.to_tex(multiple_files=multiple_files)
         for i, file in enumerate(files):
-            pdflatex_magic(tempdir, tempdir2, file, 'variant{}.pdf'.format(i))
+            pdflatex_magic(tempdir, tempdir2, file, 'variant{}.pdf'.format(i+1))
         pdflatex_magic(tempdir, tempdir2, answers, 'answers.pdf')
         shutil.make_archive(os.path.join(tempdir, 'archive'), 'zip', tempdir2)
         with open(os.path.join(tempdir, 'archive.zip'), 'rb') as f:

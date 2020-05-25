@@ -16,123 +16,21 @@
     <input name="rnd" id="rnd" value="42" size="4" required pattern="[0-9]{1,5}"><br>
     <input type="button" onclick="remove_task()" value="Удалить задание">
     <input type="button" onclick="add_task()" value="Добавить задание"><br>
-    <p id="task1"><strong>Задание 1</strong>
-        <select name="task_1">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_1_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
-    <p id="task2"><strong>Задание 2</strong>
-        <select name="task_2">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_2_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
-    <p id="task3"><strong>Задание 3</strong>
-        <select name="task_3">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_3_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
-    <p id="task4"><strong>Задание 4</strong>
-        <select name="task_4">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_4_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
-    <p id="task5"><strong>Задание 5</strong>
-        <select name="task_5">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_5_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
-    <p id="task6"><strong>Задание 6</strong>
-        <select name="task_6">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_6_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
-    <p id="task7"><strong>Задание 7</strong>
-        <select name="task_7">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_7_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
-    <p id="task8"><strong>Задание 8</strong>
-        <select name="task_8">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_8_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
-    <p id="task9"><strong>Задание 9</strong>
-        <select name="task_9">
-            <option value="simplify" selected>Упрощение</option>
-            <option value="simple">Простое</option>
-            <option value="equation">Уравнение</option>
-            <option value="trig">Упрощение Тригонометрия</option>
-       </select>
-        <select name="task_9_comp">
-            <option value="easy" selected>Простой</option>
-            <option value="medium">Средний</option>
-            <option value="hard">Сложный</option>
-       </select>
-    </p>
+    {% for i in nums %}
+        <p id="task{{ i }}"><strong>Задание {{ i }}</strong>
+            <select name="task_{{ i }}">
+                <option value="simplify" selected>Упрощение</option>
+                <option value="simple">Простое</option>
+                <option value="equation">Уравнение</option>
+                <option value="trig">Упрощение Тригонометрия</option>
+            </select>
+            <select name="task_{{ i }}_comp">
+                <option value="easy" selected>Простой</option>
+                <option value="medium">Средний</option>
+                <option value="hard">Сложный</option>
+            </select>
+        </p>
+    {% endfor %}
     <strong>Введите количество вариантов (от 1 до 99)</strong>
     <input name="num" id="num" value="3" size="4" required pattern="[1-9]{1}[0-9]{0,1}"><br>
     <strong>Отдельный файл для каждого варианта</strong>

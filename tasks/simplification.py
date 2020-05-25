@@ -64,6 +64,7 @@ class SimplifyTask(AbstractTask):
                                              floats=floats,
                                              other_letters=other_letters
                                              )
+        #self.task = Task('Упростите выражение: ', expr, answer)
         self.task = Task(' '.join([text, str(comp)]), expr, answer)
         return self.task
 

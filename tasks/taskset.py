@@ -50,9 +50,8 @@ class TaskSet:
         files = []
         if multiple_files:
             for i in range(len(self.taskset)):
-                files.append(print_tex(self.taskset[i], i))
+                files.append(print_tex(self.taskset[i], i+1))
         else:
-            # todo
             files.append(print_tex_tasks(self.taskset))
         answers = print_tex_answers(self.taskset)
         return files, answers

@@ -1,4 +1,4 @@
-from sympy import simplify, sin, cos
+from sympy import simplify, sin, cos, tan
 
 from generator.TrigonometryGenerator import TrigonometryGenerator
 from generator.extenders import create_var
@@ -44,11 +44,22 @@ class TrigonometricTask(AbstractTask):
         max_comp = extract_val(params, 'max_comp', 30)
         vars = extract_val(params, 'vals', 1)
         x, y = create_var(can_other_letters=other_letters, count=2)
+        x *= np.random.randint(1, 2)
+        y *= np.random.randint(1, 2)
         if vars == 1:
-            if np.random.rand() > 0.5:
+            rnd = np.random.rand()
+            if rnd > 0.8:
+                answer = sin(x)
+            elif rnd > 0.6:
+                answer = cos(x)
+            elif rnd > 0.4:
+                answer = sin(y)
+            elif rnd > 0.2:
+                answer = cos(y)
+            elif rnd > 0.1:
                 answer = sin(x)
             else:
-                answer = cos(x)
+                answer = cos(y)
         else:
             other_letters = True
             answer = sin(x) + cos(y)
@@ -58,6 +69,8 @@ class TrigonometricTask(AbstractTask):
                                              max_complexity=max_comp,
                                              other_letters=other_letters
                                              )
+        #self.task = Task('Упростите выражение: ', expr, answer)
         self.task = Task(' '.join([text, str(comp)]), expr, answer)
+        print(str(comp), expr, answer)
         return self.task
 

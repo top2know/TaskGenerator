@@ -17,10 +17,10 @@ complexities = {
     ADD: 1,
     POW: 1,
     LOG: 3,
-    SIN: 3,
-    COS: 3,
-    TG: 3,
-    CTG: 3,
+    SIN: 2.34,
+    COS: 2.34,
+    TG: 2.34,
+    CTG: 2.34,
     SYM: 1,
     UNK: 1
 }
@@ -80,6 +80,10 @@ class Tree:
             return sin(self.children[0].get_expr())
         elif self.operation == COS:
             return cos(self.children[0].get_expr())
+        elif self.operation == TG:
+            return tan(self.children[0].get_expr())
+        elif self.operation == CTG:
+            return cot(self.children[0].get_expr())
         elif self.operation == SYM:
             return S(self.children[0])
         elif self.operation == UNK:
@@ -147,6 +151,12 @@ def create_tree(expr):
         val = list(expr.args)
     elif type(expr) == cos:
         t = COS
+        val = list(expr.args)
+    elif type(expr) == tan:
+        t = TG
+        val = list(expr.args)
+    elif type(expr) == tan:
+        t = CTG
         val = list(expr.args)
     else:
         t = UNK

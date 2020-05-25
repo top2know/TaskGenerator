@@ -1,7 +1,9 @@
 from generator.trigonometric_extenders import TrigonometryExtender
 from generator.tree import create_tree, SYM, UNK, SIN, COS
 import numpy as np
-from sympy import simplify
+from sympy import simplify, trigsimp
+
+from printer.printing import make_pretty
 
 
 class TrigonometryGenerator:
@@ -24,6 +26,7 @@ class TrigonometryGenerator:
         while cur.children[rnd].operation not in (SIN, COS):
             if cur.children[rnd].operation in (SYM, UNK):
                 cur = tree
+                break
             else:
                 cur = cur.children[rnd]
             rnd = np.random.randint(0, len(cur.children))
@@ -33,8 +36,14 @@ class TrigonometryGenerator:
 
     @staticmethod
     def simplify(tree):
-        rnd = np.random.randint(0, len(tree.children))
-        tree.children[rnd] = create_tree(simplify(tree.children[rnd].get_expr()))
+        est = tree.get_complexity()
+        counter = 0
+        while tree.get_complexity() == est and counter < 5:
+            rnd = np.random.randint(0, len(tree.children))
+            tree.children[rnd] = create_tree(trigsimp(tree.children[rnd].get_expr()))
+            counter += 1
+        if est == tree.get_complexity():
+            return False
         return tree
 
     def generate(self, expr, min_complexity=None, max_complexity=None, other_letters=False):
@@ -46,14 +55,19 @@ class TrigonometryGenerator:
         est = ans.get_complexity()
         counter = 0
         while est < min_complexity or est > max_complexity:
+            exp = ans.get_expr()
             if counter > 20:
+                break
                 ans = create_tree(expr)
                 counter = -1
             elif est < min_complexity:
                 ans = self.extend(ans, other_letters)
             else:
                 ans = self.simplify(ans)
-
+            if not ans:
+                ans = create_tree(expr)
+                counter = -1
+            ans = create_tree(ans.get_expr())
             est = ans.get_complexity()
             counter += 1
         return ans.get_expr(), est
