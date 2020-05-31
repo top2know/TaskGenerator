@@ -1,4 +1,5 @@
 from printer.printing import print_tex_on_html, print_tex, print_tex_answers, print_tex_tasks
+import numpy as np
 
 
 class TaskSet:
@@ -35,6 +36,7 @@ class TaskSet:
         :param params: dict of params
         :return:
         """
+        np.random.seed(self.seed)
         self.taskset = [[task.generate(params) for task in self.tasks] for _ in range(num)]
 
     def to_html(self, num=0, show_answers=False):

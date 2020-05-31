@@ -12,24 +12,26 @@ from tasks.taskset import TaskSet
 import logging.handlers
 import configparser
 
+from tasks.trigonometry import TrigonometricTask
+
 config = configparser.ConfigParser()
 config.read("config")
 
 app = Flask(__name__)
 
 # noinspection PyTypeChecker
-smtp_handler = logging. \
-    handlers.SMTPHandler(mailhost=(config['SMTP']['address'], int(config['SMTP']['port'])),
-                         secure=(),
-                         fromaddr=config['SMTP']['username'],
-                         toaddrs=config['SMTP']['username'],
-                         subject=u"[{}] TaskGenerator error!".format(config['ENV']['env']),
-                         credentials=(config['SMTP']['username'], config['SMTP']['password']))
+if 'SMTP' in config:
+    smtp_handler = logging. \
+        handlers.SMTPHandler(mailhost=(config['SMTP']['address'], int(config['SMTP']['port'])),
+                             secure=(), fromaddr=config['SMTP']['username'],
+                             toaddrs=config['SMTP']['username'],
+                             subject=u"[{}] TaskGenerator error!".format(config['ENV']['env']),
+                             credentials=(config['SMTP']['username'], config['SMTP']['password']))
 
-smtp_handler.setLevel(logging.ERROR)
+    smtp_handler.setLevel(logging.ERROR)
 
-logger = logging.getLogger()
-logger.addHandler(smtp_handler)
+    logger = logging.getLogger()
+    logger.addHandler(smtp_handler)
 
 
 @app.route('/')
@@ -108,18 +110,16 @@ def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd
     text = arg.get('text')
     roots = 'roots' in arg
     floats = 'floats' in arg
+    trig = 'trig' in arg
     count = 2 if 'second_var' in arg else 1
     show_answers = 'show_answers' in arg
     as_zip = 'as_zip' in arg
     if xmin >= xmax:
         return render_template('menu.html', num=num, min_comp=min_comp, max_comp=max_comp,
                                xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
-                               second_var='second_var' in arg,
+                               second_var='second_var' in arg, trig=trig,
                                show_answers=show_answers, text=text)
-    np.random.seed(rnd)
-    tasks = [SimplifyTask() for i in range(num)]
-    taskset = TaskSet(tasks, seed=rnd)
-    taskset.generate(num=(3 if as_zip else 1), params={
+    params = {
         'xmin': xmin,
         'xmax': xmax,
         'roots': roots,
@@ -128,7 +128,13 @@ def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd
         'text': text,
         'min_comp': min_comp,
         'max_comp': max_comp
-    })
+    }
+    if trig:
+        tasks = [TrigonometricTask(params=params) for i in range(num)]
+    else:
+        tasks = [SimplifyTask(params=params) for i in range(num)]
+    taskset = TaskSet(tasks, seed=rnd)
+    taskset.generate(num=(3 if as_zip else 1))
 
     if as_zip:
         zip_file = taskset_to_zip(taskset)
@@ -140,7 +146,7 @@ def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd
     tex_html = taskset.to_html(0, show_answers=show_answers)
     return render_template('generated.html', data=tex_html, num=num,
                            min_comp=min_comp, max_comp=max_comp,
-                           xmin=xmin, xmax=xmax, rnd=rnd,
+                           xmin=xmin, xmax=xmax, rnd=rnd, trig=trig,
                            roots=roots, floats=floats, second_var='second_var' in arg,
                            show_answers=show_answers, text=text)
 
@@ -150,10 +156,10 @@ def get_example_taskset(rnd=42):
     factory = TaskFactory()
     arg = request.args
     rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
-    np.random.seed(rnd)
+    num_tasks = int(arg.get('num_tasks')) if 'num_tasks' in arg else 3
     tasks = [factory.get(arg.get('task_{}'.format(i)), arg.get('task_{}_comp'.format(i)))
-             for i in range(1, int(arg.get('num_tasks')) + 1)]
-    taskset = TaskSet(tasks)
+             for i in range(1, num_tasks + 1)]
+    taskset = TaskSet(tasks, seed=rnd)
     taskset.generate(num=int(arg.get('num')) if 'num' in arg else 3)
     zip_file = taskset_to_zip(taskset, 'multiple' in arg)
     response = make_response(zip_file)

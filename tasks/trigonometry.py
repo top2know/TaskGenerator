@@ -36,14 +36,14 @@ class TrigonometricTask(AbstractTask):
         :param params: dict of params
         :return:
         """
-        if not params:
+        if not params or params == {}:
             params = self.params
         other_letters = extract_val(params, 'other_letters', False)
         text = extract_val(params, 'text', '')
         min_comp = extract_val(params, 'min_comp', 10)
         max_comp = extract_val(params, 'max_comp', 30)
         vars = extract_val(params, 'vals', 1)
-        x, y = create_var(can_other_letters=other_letters, count=2)
+        x, y = create_var(can_other_letters=other_letters, count=2, extended_letters=True)
         x *= np.random.randint(1, 2)
         y *= np.random.randint(1, 2)
         if vars == 1:
@@ -69,8 +69,8 @@ class TrigonometricTask(AbstractTask):
                                              max_complexity=max_comp,
                                              other_letters=other_letters
                                              )
-        #self.task = Task('Упростите выражение: ', expr, answer)
-        self.task = Task(' '.join([text, str(comp)]), expr, answer)
+        self.task = Task(text, expr, answer)
+        #self.task = Task(' '.join([text, str(comp)]), expr, answer)
         print(str(comp), expr, answer)
         return self.task
 

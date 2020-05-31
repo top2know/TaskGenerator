@@ -20,13 +20,12 @@ class TrigonometryGenerator:
             return tree
         if tree.operation in (SIN, COS):
             return create_tree(getattr(self.extender, d[r])(tree.get_expr(),
-                                                                     other_letters=other_letters))
+                                                            other_letters=other_letters))
         cur = tree
         rnd = np.random.randint(0, len(cur.children))
         while cur.children[rnd].operation not in (SIN, COS):
             if cur.children[rnd].operation in (SYM, UNK):
                 cur = tree
-                break
             else:
                 cur = cur.children[rnd]
             rnd = np.random.randint(0, len(cur.children))
@@ -57,7 +56,6 @@ class TrigonometryGenerator:
         while est < min_complexity or est > max_complexity:
             exp = ans.get_expr()
             if counter > 20:
-                break
                 ans = create_tree(expr)
                 counter = -1
             elif est < min_complexity:

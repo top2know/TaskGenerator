@@ -31,7 +31,10 @@ class AbstractTask:
         :param params: dict of params
         :return:
         """
-        self.task = Task(params['condition'], params['task'], params['answer'])
+        if params:
+            self.task = Task(params['condition'], params['task'], params['answer'])
+        else:
+            self.task = Task('', '', '')
         return self.task
 
     def to_html(self):

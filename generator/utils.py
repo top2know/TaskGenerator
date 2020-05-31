@@ -49,7 +49,7 @@ def two_const(n_min=-20, n_max=20, floats=False, roots=False):
     return c1, c2
 
 
-def create_var(can_root=False, can_other_letters=False, count=1, expr=None):
+def create_var(can_root=False, can_other_letters=False, count=1, expr=None, extended_letters=False):
     """
     Create a variable
     :param count: number of variables
@@ -57,11 +57,17 @@ def create_var(can_root=False, can_other_letters=False, count=1, expr=None):
     :param can_other_letters: if variable can be not 'x'
     :return: variable
     """
-    options = ['x', 'y']
-    if expr and not can_other_letters:
-        v = list(expr.expr_free_symbols)
+    if extended_letters:
+        options = ['a', 'p', 's', 't', 'u', 'w', 'x', 'y']
     else:
-        if can_other_letters:
+        options = ['x', 'y']
+    if expr and not can_other_letters:
+        v = list(filter(lambda elem: type(elem) == Symbol, list(expr.expr_free_symbols)))
+        if len(v) == 0:
+            print(expr.expr_free_symbols, expr)
+            v = [symbols('x')]
+    else:
+        if can_other_letters or extended_letters:
             np.random.shuffle(options)
         letters = options[:count]
         v = [symbols(letter) for letter in letters]

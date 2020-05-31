@@ -10,7 +10,7 @@ params_easy = {
     'roots': False,
     'floats': False,
     'vars': 1,
-    'text': 'Простой',
+    'text': 'Упростите выражение: ',
     'min_comp': 5,
     'max_comp': 14
 }
@@ -21,7 +21,7 @@ params_medium = {
     'roots': False,
     'floats': False,
     'vars': 1,
-    'text': 'Средний',
+    'text': 'Упростите выражение: ',
     'min_comp': 15,
     'max_comp': 25
 }
@@ -32,9 +32,31 @@ params_hard = {
     'roots': False,
     'floats': False,
     'vars': 1,
-    'text': 'Сложный',
+    'text': 'Упростите выражение: ',
     'min_comp': 26,
     'max_comp': 42
+}
+
+
+trig_params_easy = {
+    'vars': 1,
+    'text': 'Упростите выражение: ',
+    'min_comp': 8,
+    'max_comp': 13
+}
+
+trig_params_medium = {
+    'vars': 1,
+    'text': 'Упростите выражение: ',
+    'min_comp': 13.01,
+    'max_comp': 21
+}
+
+trig_params_hard = {
+    'vars': 1,
+    'text': 'Упростите выражение: ',
+    'min_comp': 21.01,
+    'max_comp': 35
 }
 
 
@@ -62,10 +84,10 @@ class TaskFactory:
             return EquationTask()
         if name == 'trig':
             if comp == 'easy':
-                return TrigonometricTask(params=params_easy)
+                return TrigonometricTask(params=trig_params_easy)
             if comp == 'medium':
-                return TrigonometricTask(params=params_medium)
+                return TrigonometricTask(params=trig_params_medium)
             if comp == 'hard':
-                return TrigonometricTask(params=params_hard)
+                return TrigonometricTask(params=trig_params_hard)
             return TrigonometricTask()
         return AbstractTask()
