@@ -19,15 +19,15 @@
     {% endif %}
     <strong>Введите минимальную сложность </strong>
     {% if min_comp %}
-    <input name="min_comp" id="min_comp" value={{ min_comp }} size="4" required pattern="[0-9]+"><br>
+    <input name="min_comp" id="min_comp" value={{ min_comp }} size="4" required pattern="[1-9]{1}[0-9]{0,1}"><br>
     {% else %}
-    <input name="min_comp" id="min_comp" value="10" size="4" required pattern="[0-9]+"><br>
+    <input name="min_comp" id="min_comp" value="10" size="4" required pattern="[1-9]{1}[0-9]{0,1}"><br>
     {% endif %}
     <strong>Введите максимальную сложность </strong>
     {% if max_comp %}
-    <input name="max_comp" id="max_comp" value={{ max_comp }} size="4" required pattern="[0-9]+"><br>
+    <input name="max_comp" id="max_comp" value={{ max_comp }} size="4" required pattern="[1-9]{1}[0-9]{0,1}"><br>
     {% else %}
-    <input name="max_comp" id="max_comp" value="30" size="4" required pattern="[0-9]+"><br>
+    <input name="max_comp" id="max_comp" value="30" size="4" required pattern="[1-9]{1}[0-9]{0,1}"><br>
     {% endif %}
     <strong>Введите текст задания </strong>
     <input name="text" id="text" value="{{ text }}" size="40"><br>
@@ -71,7 +71,7 @@
     {% if trig %}
     <input type="checkbox" name="trig" id="trig" checked><br>
     {% else %}
-    <input type="checkbox" name="trig" id="trigr"><br>
+    <input type="checkbox" name="trig" id="trig"><br>
     {% endif %}
     <strong>Показывать ответ </strong>
     {% if show_answers %}

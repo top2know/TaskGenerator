@@ -63,7 +63,7 @@ class TrigonometricTask(AbstractTask):
         else:
             other_letters = True
             answer = sin(x) + cos(y)
-        # todo remove complexity or define its usefulness
+
         expr, comp = self.generator.generate(answer,
                                              min_complexity=min_comp,
                                              max_complexity=max_comp,

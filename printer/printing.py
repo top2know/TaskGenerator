@@ -73,7 +73,6 @@ def make_fractions_pretty(expr, check=True):
     :param check: debug option
     :return: transformed expression
     """
-    # TODO: works badly
     if type(expr) is not mul.Mul:
         return expr
     d = {}

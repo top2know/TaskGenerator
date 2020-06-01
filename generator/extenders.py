@@ -16,7 +16,7 @@ def extender_1(expr, n_min=-20, n_max=20, floats=False, roots=False, other_lette
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
-    # TODO: in place of a and b there can be any function
+
     x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
@@ -62,7 +62,7 @@ def extender_3(expr, n_min=-20, n_max=20, floats=False, roots=False, other_lette
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
-    # TODO: in place of a and b there can be any function
+
     x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
@@ -86,7 +86,7 @@ def extender_4(expr, n_min=-20, n_max=20, floats=False, roots=False, other_lette
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
-    # TODO: in place of a and b there can be any function
+
     x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
@@ -113,7 +113,7 @@ def extender_5(expr, n_min=-20, n_max=20, floats=False, roots=False, other_lette
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
-    # TODO: in place of a and b there can be any function
+
     x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)
@@ -140,7 +140,7 @@ def extender_6(expr, n_min=-20, n_max=20, floats=False, roots=False, other_lette
     if n_min >= n_max:
         raise ValueError('n_min ({}) should be less than n_max ({})'.format(n_min, n_max))
     c1, c2 = two_const(n_min, n_max, floats, roots)
-    # TODO: in place of a and b there can be any function
+
     x = create_var(can_root=roots, can_other_letters=other_letters)
     a = x + S(c1)
     b = x + S(c2)

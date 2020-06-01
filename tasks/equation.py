@@ -37,13 +37,11 @@ class EquationTask(AbstractTask):
         else:
             other_letters = True
             answer = x + y
-        # todo remove complexity or define its usefulness
         task, comp = self.generator.generate(answer,
                                              min_complexity=min_comp,
                                              max_complexity=max_comp,
                                              xmin=xmin,
                                              xmax=xmax,
-                                             # todo add roots and floats to generator
                                              # roots=roots,
                                              # floats=floats,
                                              other_letters=other_letters
@@ -52,7 +50,7 @@ class EquationTask(AbstractTask):
         answer = np.random.randint(3, 13)
         equation = Eq(task, answer)
         solutions = solve(equation, x)
-        print(solutions)
+
         self.task = Task('Решите уравнение: ', equation, ', '.join(list(map(str, solutions))))
         #self.task = Task(' '.join([text, str(comp)]), equation, ', '.join(list(map(str, solutions))))
         return self.task

@@ -114,7 +114,7 @@ def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd
     count = 2 if 'second_var' in arg else 1
     show_answers = 'show_answers' in arg
     as_zip = 'as_zip' in arg
-    if xmin >= xmax:
+    if xmin >= xmax or max_comp - min_comp < 5:
         return render_template('menu.html', num=num, min_comp=min_comp, max_comp=max_comp,
                                xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
                                second_var='second_var' in arg, trig=trig,

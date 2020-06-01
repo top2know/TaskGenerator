@@ -53,14 +53,12 @@ class SimplifyTask(AbstractTask):
         else:
             other_letters = True
             answer = x + y
-        # todo remove complexity or define its usefulness
         expr, comp = self.generator.generate(answer,
                                              min_complexity=min_comp,
                                              max_complexity=max_comp,
                                              xmin=xmin,
                                              xmax=xmax,
-                                             # todo add roots and floats to generator
-                                             # roots=roots,
+                                             roots=roots,
                                              floats=floats,
                                              other_letters=other_letters
                                              )
