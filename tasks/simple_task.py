@@ -2,9 +2,11 @@ import numpy as np
 from tasks.task import AbstractTask, Task
 
 data = [
-    ['When was SE founded?', 2006],
-    ['How many states are in USA?', 50],
-    ['Some question', 'Some answer']
+    ['Когда была основана ПИ?', 2006],
+    ['Сколько штатов в США?', 50],
+    ['Случайный вопрос', 'Случайный ответ'],
+    ['Чему равно число пи?', 3.14159265],
+    ['Ответ на главный вопрос жизни, вселенной и всего такого', 42]
 ]
 
 

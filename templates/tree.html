@@ -11,6 +11,7 @@
 {% block content %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
     {{ expression | safe }}
+    <p>Сложность выражения: {{ comp }}</p>
     {{ tree | safe }}
 {% endblock content %}
 </body>

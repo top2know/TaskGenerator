@@ -52,5 +52,5 @@ class EquationTask(AbstractTask):
         solutions = solve(equation, x)
 
         self.task = Task('Решите уравнение: ', equation, ', '.join(list(map(str, solutions))))
-        #self.task = Task(' '.join([text, str(comp)]), equation, ', '.join(list(map(str, solutions))))
+
         return self.task

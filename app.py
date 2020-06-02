@@ -62,7 +62,7 @@ def tree():
     mfp = task.get().get_task()
     t = create_tree(make_fractions_pretty(mfp))
     res = t.print()
-    return render_template('tree.html', expression=tex_html, tree=res)
+    return render_template('tree.html', expression=tex_html, tree=res, comp=t.get_complexity())
 
 
 @app.route('/menu')
@@ -90,7 +90,7 @@ def taskset_to_zip(taskset, multiple_files=True):
     with tempfile.TemporaryDirectory() as tempdir, tempfile.TemporaryDirectory() as tempdir2:
         files, answers = taskset.to_tex(multiple_files=multiple_files)
         for i, file in enumerate(files):
-            pdflatex_magic(tempdir, tempdir2, file, 'variant{}.pdf'.format(i+1))
+            pdflatex_magic(tempdir, tempdir2, file, 'variant{}.pdf'.format(i + 1))
         pdflatex_magic(tempdir, tempdir2, answers, 'answers.pdf')
         shutil.make_archive(os.path.join(tempdir, 'archive'), 'zip', tempdir2)
         with open(os.path.join(tempdir, 'archive.zip'), 'rb') as f:
@@ -101,20 +101,33 @@ def taskset_to_zip(taskset, multiple_files=True):
 @app.route('/generate_taskset', methods=['GET'])
 def route_generate_taskset(num=1, min_comp=10, max_comp=30, xmin=-5, xmax=5, rnd=42):
     arg = request.args
-    num = int(arg.get('num')) if 'num' in arg else num
-    min_comp = int(arg.get('min_comp')) if 'min_comp' in arg else min_comp
-    max_comp = int(arg.get('max_comp')) if 'max_comp' in arg else max_comp
-    xmin = int(arg.get('xmin')) if 'xmin' in arg else xmin
-    xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
-    rnd = int(arg.get('rnd')) if 'rnd' in arg else rnd
-    text = arg.get('text')
+    try:
+        num = int(arg.get('num')) if 'num' in arg else num
+        min_comp = int(arg.get('min_comp')) if 'min_comp' in arg else min_comp
+        max_comp = int(arg.get('max_comp')) if 'max_comp' in arg else max_comp
+        xmin = int(arg.get('xmin')) if 'xmin' in arg else xmin
+        xmax = int(arg.get('xmax')) if 'xmax' in arg else xmax
+        rnd = abs(int(arg.get('rnd'))) if 'rnd' in arg else rnd
+    except:
+        return render_template('menu.html', num=arg.get('num'), min_comp=arg.get('min_comp'),
+                               max_comp=arg.get('max_comp'), xmin=arg.get('xmin'), xmax=arg.get('xmax'),
+                               rnd=arg.get('rnd'), roots='roots' in arg, floats='floats' in arg,
+                               second_var='second_var' in arg, trig='trig' in arg,
+                               show_answers='show_answers' in arg, text=arg.get('text') if 'text' in arg else '')
+    text = arg.get('text') if 'text' in arg else ''
     roots = 'roots' in arg
     floats = 'floats' in arg
     trig = 'trig' in arg
     count = 2 if 'second_var' in arg else 1
     show_answers = 'show_answers' in arg
     as_zip = 'as_zip' in arg
-    if xmin >= xmax or max_comp - min_comp < 5:
+    if xmin > xmax:
+        xmin, xmax = xmax, xmin
+    if max_comp < min_comp:
+        min_comp, max_comp = max_comp, min_comp
+
+    if num > 99 or num < 1 or max_comp < 1 or min_comp > 99 or xmin > 99 or xmax < -99 \
+            or xmin == xmax or max_comp - min_comp < 5:
         return render_template('menu.html', num=num, min_comp=min_comp, max_comp=max_comp,
                                xmin=xmin, xmax=xmax, rnd=rnd, roots=roots, floats=floats,
                                second_var='second_var' in arg, trig=trig,
